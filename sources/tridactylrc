@@ -1,0 +1,13 @@
+" Reset all settings and unbind all keys
+sanitise tridactyllocal tridactylsync
+unbindall
+
+" Blank new tab page
+set newtab about:blank
+
+" Scroll with j/k
+bind j scrollline 5
+bind k scrollline -5
+
+" Link hints with f
+bind f hint

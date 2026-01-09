@@ -4,6 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ./home.nix
+    ./firefox.nix
   ];
 
   # ==========================================================================
@@ -93,6 +94,7 @@
       # Terminal
       ghostty
       fish
+      warp-terminal
 
       # Development
       bun
@@ -110,7 +112,6 @@
 
       # Applications
       obsidian
-      firefox
       spotify
       rclone
 
@@ -124,7 +125,6 @@
   # Programs
   # ==========================================================================
 
-  programs.firefox.enable = true;
   programs.fish.enable = true;
 
   programs._1password.enable = true;
