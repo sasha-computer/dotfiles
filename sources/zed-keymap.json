@@ -1,0 +1,18 @@
+[
+  {
+    "context": "Editor && !menu",
+    "bindings": {
+      "ctrl-c": "editor::Copy",
+      "ctrl-x": "editor::Cut",
+      "ctrl-v": "editor::Paste",
+      "ctrl-y": "editor::Undo",
+      "ctrl-f": "buffer_search::Deploy",
+      "ctrl-o": "workspace::Open",
+      "ctrl-s": "workspace::ToggleLeftDock",
+      "ctrl-shift-s": "workspace::ToggleRightDock",
+      "ctrl-a": "editor::SelectAll",
+      "ctrl-b": "workspace::ToggleLeftDock",
+      "ctrl-j": "terminal_panel::Toggle"
+    }
+  }
+]
