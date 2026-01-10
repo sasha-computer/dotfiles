@@ -35,6 +35,9 @@
 
       # Ghostty
       ".config/ghostty/config".source = ./sources/ghostty.conf;
+
+      # KDE custom shortcuts
+      ".config/khotkeysrc".source = ./sources/khotkeysrc;
     };
 
     # ========================================================================

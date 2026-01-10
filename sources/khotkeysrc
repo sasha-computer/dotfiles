@@ -1,0 +1,30 @@
+[Data]
+DataCount=1
+
+[Data_1]
+Comment=Voice-to-text toggle
+Enabled=true
+Name=Voxtype
+Type=SIMPLE_ACTION_DATA
+
+[Data_1Actions]
+ActionsCount=1
+
+[Data_1Actions0]
+CommandURL=voxtype record-toggle
+Type=COMMAND_URL
+
+[Data_1Conditions]
+ConditionsCount=0
+
+[Data_1Triggers]
+TriggersCount=1
+
+[Data_1Triggers0]
+Key=Alt_R
+Type=SHORTCUT
+Uuid={d4736b00-8c3e-4d9f-b3a1-5e7f9a2c1b0d}
+
+[General]
+Autostart=true
+ItemsCount=1
