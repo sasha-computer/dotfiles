@@ -9,6 +9,7 @@ NixOS dotfiles for a Framework 13 laptop running Plasma 6 desktop. Uses Home Man
 ## Commands
 
 Rebuild and switch to new configuration (run from this directory):
+
 ```sh
 nrs
 ```
