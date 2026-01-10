@@ -120,6 +120,7 @@
       obsidian
       spotify
       rclone
+      vlc
 
       # Games
       bolt-launcher
