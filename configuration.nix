@@ -95,6 +95,7 @@
       ghostty
       fish
       warp-terminal
+      btop
 
       # Development
       bun
