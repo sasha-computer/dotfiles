@@ -39,6 +39,9 @@ in
 
       # Tridactyl
       ".config/tridactyl/tridactylrc".source = ./sources/tridactylrc;
+
+      # Ghostty
+      ".config/ghostty/config".source = ./sources/ghostty.conf;
     };
 
     # ========================================================================
