@@ -25,6 +25,14 @@
     };
 
     # ========================================================================
+    # Environment Variables
+    # ========================================================================
+
+    home.sessionVariables = {
+      EDITOR = "nvim";
+    };
+
+    # ========================================================================
     # Dotfiles
     # ========================================================================
 
@@ -72,6 +80,7 @@
         };
         commit.gpgsign = true;
         user.signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGug35ClTdXh9ege0MmldlDu+xu+EKILrtlqkSbpBhPX";
+        push.autoSetupRemote = true;
       };
     };
 
