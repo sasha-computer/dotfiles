@@ -116,6 +116,7 @@
       nixd
       nil
       claude-code
+      gh
 
       # Communication
       slack

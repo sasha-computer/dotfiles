@@ -11,7 +11,6 @@
       "ctrl-s": "workspace::ToggleLeftDock",
       "ctrl-shift-s": "workspace::ToggleRightDock",
       "ctrl-a": "editor::SelectAll",
-      "ctrl-b": "workspace::ToggleLeftDock",
       "ctrl-j": "terminal_panel::Toggle"
     }
   }
