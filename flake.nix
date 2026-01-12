@@ -11,10 +11,6 @@
       url = "github:peteonrails/voxtype";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    hashcards = {
-      url = "github:neutronmoderator/hashcards";
-    };
   };
 
   outputs =
@@ -22,7 +18,6 @@
       nixpkgs,
       home-manager,
       voxtype,
-      hashcards,
       ...
     }:
     {
@@ -35,7 +30,6 @@
             nixpkgs.overlays = [
               (final: prev: {
                 voxtype = voxtype.packages.${prev.system}.default;
-                hashcards = hashcards.packages.${prev.system}.default;
               })
             ];
           }

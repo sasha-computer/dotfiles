@@ -128,7 +128,6 @@
       rclone
       vlc
       localsend
-      hashcards
 
       # Games
       bolt-launcher
@@ -136,7 +135,7 @@
 
       # Voice to text
       voxtype
-      wtype        # for typing on Wayland
+      wtype # for typing on Wayland
       wl-clipboard # for clipboard on Wayland
     ];
   };
@@ -176,7 +175,10 @@
   # Nix Settings
   # ==========================================================================
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # ==========================================================================
   # System
