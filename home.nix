@@ -47,6 +47,8 @@
 
       # Tridactyl
       ".config/tridactyl/tridactylrc".source = ./sources/tridactylrc;
+      ".mozilla/native-messaging-hosts/tridactyl.json".source =
+        "${pkgs.tridactyl-native}/lib/mozilla/native-messaging-hosts/tridactyl.json";
 
       # Ghostty
       ".config/ghostty/config".source = ./sources/ghostty.conf;

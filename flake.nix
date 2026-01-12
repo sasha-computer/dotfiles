@@ -11,22 +11,35 @@
       url = "github:peteonrails/voxtype";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-  };
 
-  outputs = { nixpkgs, home-manager, voxtype, ... }: {
-    nixosConfigurations.fw13 = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        ./configuration.nix
-        home-manager.nixosModules.home-manager
-        {
-          nixpkgs.overlays = [
-            (final: prev: {
-              voxtype = voxtype.packages.${prev.system}.default;
-            })
-          ];
-        }
-      ];
+    hashcards = {
+      url = "github:neutronmoderator/hashcards";
     };
   };
+
+  outputs =
+    {
+      nixpkgs,
+      home-manager,
+      voxtype,
+      hashcards,
+      ...
+    }:
+    {
+      nixosConfigurations.fw13 = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            nixpkgs.overlays = [
+              (final: prev: {
+                voxtype = voxtype.packages.${prev.system}.default;
+                hashcards = hashcards.packages.${prev.system}.default;
+              })
+            ];
+          }
+        ];
+      };
+    };
 }

@@ -128,6 +128,7 @@
       rclone
       vlc
       localsend
+      hashcards
 
       # Games
       bolt-launcher
