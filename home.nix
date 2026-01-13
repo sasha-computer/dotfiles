@@ -60,6 +60,17 @@
 
       # Ghostty
       ".config/ghostty/config".source = ./sources/ghostty.conf;
+
+      # Autostart 1Password on login (for SSH agent)
+      ".config/autostart/1password.desktop".text = ''
+        [Desktop Entry]
+        Name=1Password
+        Exec=1password --silent
+        Terminal=false
+        Type=Application
+        StartupNotify=false
+        X-GNOME-Autostart-enabled=true
+      '';
     };
 
     # ========================================================================
@@ -68,6 +79,9 @@
 
     programs.plasma = {
       enable = true;
+
+      # Start with empty session (don't restore windows from last session)
+      configFile."ksmserverrc"."General"."loginMode" = "emptySession";
 
       # Disable focus stealing prevention so Firefox pops up when opening links
       # from terminal (Plasma 6 / Wayland XDG activation token limitation)

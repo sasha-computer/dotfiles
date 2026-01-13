@@ -16,4 +16,18 @@ alias gcb="git checkout -b"
 alias gcl="git clone"
 alias cc="cd ~/Claude & claude --allow-dangerously-skip-permissions"
 alias z.="zeditor ."
-alias drill="hashcards drill ~/Documents/2026/Cards &"
+# Hashcards drill in tmux (stays running when you switch terminals)
+function drill
+    if test "$argv[1]" = "stop"
+        tmux kill-session -t drill 2>/dev/null && echo "Drill session stopped" || echo "No drill session running"
+    else if test "$argv[1]" = "attach"
+        tmux attach -t drill 2>/dev/null || echo "No drill session running"
+    else if tmux has-session -t drill 2>/dev/null
+        echo "Drill session already running at http://localhost:8000"
+        echo "Use 'drill stop' to stop it, or 'drill attach' to view the tmux session"
+    else
+        tmux new-session -d -s drill "hashcards drill $HOME/Documents/2026/Cards $argv"
+        echo "Drill started at http://localhost:8000"
+        echo "Use 'drill stop' to stop, 'drill attach' to view session"
+    end
+end

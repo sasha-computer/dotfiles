@@ -1,2 +1,2 @@
 #!/bin/sh
-sudo /run/current-system/sw/bin/nixos-rebuild switch --flake /home/sasha/Dotfiles#fw13
+sudo nixos-rebuild switch --flake /home/sasha/Dotfiles#fw13

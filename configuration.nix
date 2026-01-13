@@ -107,6 +107,7 @@
       fish
       warp-terminal
       btop
+      tmux
 
       # Development
       bun
