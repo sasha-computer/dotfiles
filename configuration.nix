@@ -143,6 +143,9 @@
 
       # Screenshots
       flameshot
+
+      # Tools
+      unzip
     ];
   };
 
