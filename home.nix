@@ -63,6 +63,7 @@
 
       # Claude Code
       ".claude/CLAUDE.md".source = ./sources/claude/CLAUDE.md;
+      ".claude/settings.json".source = ./sources/claude/settings.json;
       ".claude/commands" = {
         source = ./sources/claude/commands;
         recursive = true;

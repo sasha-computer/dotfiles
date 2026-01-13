@@ -18,6 +18,14 @@
 
 Use the `/nix` command for NixOS package management. Rebuild with `nrs`.
 
+## Claude Settings
+
+All Claude Code configuration is managed via NixOS dotfiles. **Never edit `~/.claude/` directly** - those files are deployed by Home Manager and will be overwritten.
+
+- **Source location:** `~/Dotfiles/sources/claude/`
+- **Deployed to:** `~/.claude/`
+- **After changes:** Run `nrs` to rebuild and deploy
+
 ## Study Workflow
 
 - `/study-session` - Start studying material from Obsidian vault
