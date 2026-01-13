@@ -122,6 +122,7 @@
       slack
       signal-desktop-bin
       telegram-desktop
+      discord
 
       # Applications
       obsidian
@@ -138,6 +139,9 @@
       voxtype
       wtype # for typing on Wayland
       wl-clipboard # for clipboard on Wayland
+
+      # Screenshots
+      flameshot
     ];
   };
 
