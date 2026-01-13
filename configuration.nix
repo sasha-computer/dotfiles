@@ -146,6 +146,9 @@
 
       # Tools
       unzip
+
+      # Fonts
+      powerline-fonts
     ];
   };
 
