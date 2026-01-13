@@ -14,7 +14,7 @@ alias cdd="cd ~/Developer/"
 alias gc="git checkout"
 alias gcb="git checkout -b"
 alias gcl="git clone"
-alias cc="cd ~/Claude & claude --allow-dangerously-skip-permissions"
+alias cc="claude --dangerously-skip-permissions"
 alias z.="zeditor ."
 # Hashcards drill in tmux (stays running when you switch terminals)
 function drill
