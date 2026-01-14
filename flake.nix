@@ -35,7 +35,7 @@
           home-manager.nixosModules.home-manager
           {
             home-manager.sharedModules = [
-              plasma-manager.homeManagerModules.plasma-manager
+              plasma-manager.homeModules.plasma-manager
             ];
             nixpkgs.overlays = [
               (final: prev: {

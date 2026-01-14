@@ -110,7 +110,7 @@
         "voxtype-toggle" = {
           name = "Voice-to-text toggle";
           key = "Meta+V";
-          command = "voxtype record-toggle";
+          command = "voxtype record toggle";
         };
       };
 
