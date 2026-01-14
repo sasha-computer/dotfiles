@@ -114,6 +114,8 @@
       uv
       cargo
       rustc
+      rust-analyzer
+      rustPlatform.rustLibSrc
       nixd
       nil
       claude-code
