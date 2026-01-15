@@ -2,6 +2,7 @@
 
 ## Environment
 
+- **Year:** 2026
 - **Shell:** fish
 - **OS:** NixOS (Framework 13 laptop)
 - **Bash location:** `/run/current-system/sw/bin/bash`

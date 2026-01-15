@@ -67,6 +67,23 @@
   ];
 
   # ==========================================================================
+  # Security
+  # ==========================================================================
+
+  # Allow passwordless nixos-rebuild (for Claude Code automation)
+  security.sudo.extraRules = [
+    {
+      users = [ "sasha" ];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/nixos-rebuild";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
+
+  # ==========================================================================
   # Audio
   # ==========================================================================
 
@@ -86,6 +103,12 @@
   services.printing.enable = true;
 
   # ==========================================================================
+  # Virtualisation
+  # ==========================================================================
+
+  virtualisation.docker.enable = true;
+
+  # ==========================================================================
   # Users
   # ==========================================================================
 
@@ -95,6 +118,7 @@
     extraGroups = [
       "networkmanager"
       "wheel"
+      "docker"
     ];
     shell = pkgs.fish;
     packages = with pkgs; [
@@ -152,6 +176,7 @@
       jq
       fzf
       ripgrep
+      gum
 
       # Fonts
       powerline-fonts

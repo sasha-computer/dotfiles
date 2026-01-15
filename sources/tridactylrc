@@ -1,13 +1,164 @@
-" Reset all settings and unbind all keys
+" Reset stored settings
 sanitise tridactyllocal tridactylsync
-unbindall
+
+" Unbind all defaults
+unbind o
+unbind O
+unbind w
+unbind W
+unbind t
+unbind T
+unbind p
+unbind P
+unbind h
+unbind l
+unbind G
+unbind d
+unbind D
+unbind u
+unbind U
+unbind r
+unbind R
+unbind x
+unbind s
+unbind S
+unbind M
+unbind B
+unbind b
+unbind F
+unbind v
+unbind a
+unbind A
+unbind m
+unbind `
+unbind .
+unbind gg
+unbind yy
+unbind ys
+unbind yq
+unbind yc
+unbind ym
+unbind yo
+unbind yt
+unbind gh
+unbind gH
+unbind gx0
+unbind gx$
+unbind gi
+unbind g?
+unbind g!
+unbind g;
+unbind gt
+unbind gT
+unbind g^
+unbind g0
+unbind g$
+unbind ga
+unbind gr
+unbind gu
+unbind gU
+unbind gf
+unbind gF
+unbind zi
+unbind zo
+unbind zm
+unbind zr
+unbind zM
+unbind zR
+unbind zz
+unbind zI
+unbind zO
+unbind ZZ
+unbind ]]
+unbind [[
+unbind [c
+unbind ]c
+unbind <<
+unbind >>
+unbind $
+unbind ^
+unbind H
+unbind L
+unbind J
+unbind K
+unbind <C-e>
+unbind <C-y>
+unbind <C-u>
+unbind <C-d>
+unbind <C-f>
+unbind <C-b>
+unbind <C-v>
+unbind <C-x>
+unbind <C-a>
+unbind <C-o>
+unbind <C-i>
+unbind <C-[>
+unbind <F1>
+unbind <S-Insert>
+unbind <AC-Escape>
+unbind <AC-`>
+unbind <S-Escape>
+unbind <A-p>
+unbind <A-m>
+unbind ;x
+unbind ;c
+unbind ;:
+unbind ;X
+unbind ;i
+unbind ;b
+unbind ;o
+unbind ;I
+unbind ;k
+unbind ;K
+unbind ;y
+unbind ;Y
+unbind ;p
+unbind ;h
+unbind ;P
+unbind ;r
+unbind ;s
+unbind ;S
+unbind ;a
+unbind ;A
+unbind ;;
+unbind ;#
+unbind ;v
+unbind ;V
+unbind ;w
+unbind ;t
+unbind ;O
+unbind ;W
+unbind ;T
+unbind ;d
+unbind ;gd
+unbind ;z
+unbind ;m
+unbind ;M
+unbind ;gi
+unbind ;gI
+unbind ;gk
+unbind ;gy
+unbind ;gp
+unbind ;gP
+unbind ;gr
+unbind ;gs
+unbind ;gS
+unbind ;ga
+unbind ;gA
+unbind ;g;
+unbind ;g#
+unbind ;gv
+unbind ;gw
+unbind ;gb
+unbind ;gF
+unbind ;gf
+unbind :
 
 " Blank new tab page
 set newtab about:blank
 
-" Scroll with j/k
+" Minimal bindings
 bind j scrollline 5
 bind k scrollline -5
-
-" Link hints with f
 bind f hint
+bind <Escape> composite mode normal ; hidecmdline

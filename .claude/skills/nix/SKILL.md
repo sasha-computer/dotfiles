@@ -1,3 +1,8 @@
+---
+name: nix
+description: NixOS package management and dotfiles configuration. Activates for package install/remove/search, system updates, and configuration changes.
+---
+
 # NixOS Package Management
 
 Help with NixOS configuration and package management.
@@ -32,8 +37,7 @@ Help with NixOS configuration and package management.
    - Then rebuild
 
 6. **Apply changes:**
-   - Ask user: "Ready to rebuild? This will run `nrs` (nixos-rebuild switch)"
-   - If confirmed, run `nrs` in `~/Dotfiles`
+   - Run: `nrs` (alias for nixos-rebuild switch)
    - If rebuild fails:
      - Analyze the error output
      - Identify the root cause (missing dependency, syntax error, etc.)

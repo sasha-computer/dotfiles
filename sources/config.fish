@@ -10,12 +10,24 @@ alias gaa="git add ."
 alias gs="git status"
 alias gfp="git fetch --prune"
 alias gpl="git pull"
+alias gp="git push"
 alias cdd="cd ~/Developer/"
 alias gc="git checkout"
 alias gcb="git checkout -b"
 alias gcl="git clone"
 alias cc="claude --allow-dangerously-skip-permissions"
 alias z.="zeditor ."
+alias cfg="cd ~/Dotfiles/ && cc"
+
+function get-ralph
+    if test -z "$argv[1]"
+        echo "Usage: get-ralph <project-name>"
+        return 1
+    end
+    gh repo create $argv[1] -p neutronmoderator/ralph-wiggum --private --clone
+end
+
+
 # Hashcards drill in tmux (stays running when you switch terminals)
 function drill
     if test "$argv[1]" = "stop"
