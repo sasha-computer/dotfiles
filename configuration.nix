@@ -148,6 +148,10 @@
 
       # Tools
       unzip
+      dust
+      jq
+      fzf
+      ripgrep
 
       # Fonts
       powerline-fonts

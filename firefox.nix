@@ -173,6 +173,12 @@
           Value = false;
           Status = "locked";
         };
+
+        # WebGPU
+        "dom.webgpu.enabled" = {
+          Value = true;
+          Status = "locked";
+        };
       };
 
       # ======================================================================
