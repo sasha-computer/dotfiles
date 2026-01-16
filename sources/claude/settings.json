@@ -1,7 +1,3 @@
 {
-  "alwaysThinkingEnabled": true,
-  "statusLine": {
-    "type": "command",
-    "command": "bunx -y ccstatusline@latest"
-  }
+  "alwaysThinkingEnabled": true
 }

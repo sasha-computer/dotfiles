@@ -119,6 +119,7 @@
       "networkmanager"
       "wheel"
       "docker"
+      "ydotool"
     ];
     shell = pkgs.fish;
     packages = with pkgs; [
@@ -144,6 +145,7 @@
       nil
       claude-code
       gh
+      code-cursor
 
       # Communication
       slack
@@ -188,6 +190,9 @@
   # ==========================================================================
 
   programs.fish.enable = true;
+
+  # ydotool for voxtype (wtype doesn't work on KDE Wayland)
+  programs.ydotool.enable = true;
 
   programs._1password.enable = true;
   programs._1password-gui = {
