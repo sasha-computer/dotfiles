@@ -37,7 +37,7 @@
       nixosConfigurations.fw13 = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
-          ./configuration.nix
+          ./hosts/fw13
           home-manager.nixosModules.home-manager
           {
             home-manager.sharedModules = [

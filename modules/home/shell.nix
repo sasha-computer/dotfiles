@@ -46,6 +46,29 @@
 
   programs.fish = {
     enable = true;
+    shellAliases = {
+      # NixOS
+      nrs = "sudo nixos-rebuild switch --flake ~/Dotfiles#fw13";
+
+      # Git
+      gl = "git log --oneline";
+      gcm = "git commit -m";
+      gaa = "git add .";
+      gs = "git status";
+      gfp = "git fetch --prune";
+      gpl = "git pull";
+      gp = "git push";
+      gc = "git checkout";
+      gcb = "git checkout -b";
+      gcl = "git clone";
+
+      # Navigation & Tools
+      ll = "ls -l";
+      cdd = "cd ~/Developer/";
+      cc = "claude --allow-dangerously-skip-permissions";
+      "z." = "zeditor .";
+      cfg = "cd ~/Dotfiles/ && cc";
+    };
     plugins = [
       {
         name = "z";

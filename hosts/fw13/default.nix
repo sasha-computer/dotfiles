@@ -1,21 +1,24 @@
+# Framework 13 (fw13) host configuration
 { pkgs, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
-    ./home.nix
-    ./firefox.nix
+
+    # Home Manager & Firefox
+    ../../home.nix
+    ../../firefox.nix
 
     # Modular NixOS configuration
-    ./modules/nixos/boot.nix
-    ./modules/nixos/networking.nix
-    ./modules/nixos/locale.nix
-    ./modules/nixos/desktop.nix
-    ./modules/nixos/security.nix
-    ./modules/nixos/services.nix
-    ./modules/nixos/virtualisation.nix
-    ./modules/nixos/programs.nix
-    ./modules/nixos/nix.nix
+    ../../modules/nixos/boot.nix
+    ../../modules/nixos/networking.nix
+    ../../modules/nixos/locale.nix
+    ../../modules/nixos/desktop.nix
+    ../../modules/nixos/security.nix
+    ../../modules/nixos/services.nix
+    ../../modules/nixos/virtualisation.nix
+    ../../modules/nixos/programs.nix
+    ../../modules/nixos/nix.nix
   ];
 
   # ==========================================================================

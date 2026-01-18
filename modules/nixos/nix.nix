@@ -15,4 +15,12 @@
     dates = "weekly";
     options = "--delete-older-than 30d";
   };
+
+  # Automatic system upgrades (weekly, no auto-reboot)
+  system.autoUpgrade = {
+    enable = true;
+    flake = "/home/sasha/Dotfiles#fw13";
+    dates = "weekly";
+    allowReboot = false;
+  };
 }
