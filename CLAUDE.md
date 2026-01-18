@@ -31,7 +31,7 @@ sources/               # Raw config files deployed via home.file
 | Plasma hotkeys | `modules/home/desktop.nix` |
 | Nix settings, GC, auto-upgrade | `modules/nixos/nix.nix` |
 
-## Patterns
+## Practices
 
 - **Modular**: Each concern in its own `.nix` file
 - **Host-based**: `hosts/<name>/` for multi-machine support
