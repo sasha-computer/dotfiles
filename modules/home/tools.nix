@@ -6,12 +6,6 @@
   # ==========================================================================
 
   home.file = {
-    # Scripts
-    ".local/bin" = {
-      source = ../../sources/scripts;
-      recursive = true;
-    };
-
     # 1Password SSH agent
     ".config/1Password/ssh/agent.toml".source = ../../sources/1password-ssh-agent.toml;
 
