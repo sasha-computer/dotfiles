@@ -5,108 +5,18 @@
     ./hardware-configuration.nix
     ./home.nix
     ./firefox.nix
+
+    # Modular NixOS configuration
+    ./modules/nixos/boot.nix
+    ./modules/nixos/networking.nix
+    ./modules/nixos/locale.nix
+    ./modules/nixos/desktop.nix
+    ./modules/nixos/security.nix
+    ./modules/nixos/services.nix
+    ./modules/nixos/virtualisation.nix
+    ./modules/nixos/programs.nix
+    ./modules/nixos/nix.nix
   ];
-
-  # ==========================================================================
-  # Boot
-  # ==========================================================================
-
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.initrd.luks.devices."luks-1efcba1a-5db4-42d7-9af3-25c9ccf2e748".device =
-    "/dev/disk/by-uuid/1efcba1a-5db4-42d7-9af3-25c9ccf2e748";
-
-  # ==========================================================================
-  # Networking
-  # ==========================================================================
-
-  networking.hostName = "fw13";
-  networking.networkmanager.enable = true;
-
-  # LocalSend discovery and file transfer
-  networking.firewall = {
-    allowedTCPPorts = [ 53317 ];
-    allowedUDPPorts = [ 53317 ];
-  };
-
-  # ==========================================================================
-  # Localisation
-  # ==========================================================================
-
-  time.timeZone = "Europe/London";
-
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_GB.UTF-8";
-    LC_IDENTIFICATION = "en_GB.UTF-8";
-    LC_MEASUREMENT = "en_GB.UTF-8";
-    LC_MONETARY = "en_GB.UTF-8";
-    LC_NAME = "en_GB.UTF-8";
-    LC_NUMERIC = "en_GB.UTF-8";
-    LC_PAPER = "en_GB.UTF-8";
-    LC_TELEPHONE = "en_GB.UTF-8";
-    LC_TIME = "en_GB.UTF-8";
-  };
-
-  # ==========================================================================
-  # Desktop Environment
-  # ==========================================================================
-
-  services.xserver.enable = true;
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
-
-  # Exclude unwanted KDE apps
-  environment.plasma6.excludePackages = with pkgs.kdePackages; [
-    kate
-  ];
-
-  # ==========================================================================
-  # Security
-  # ==========================================================================
-
-  # Allow passwordless nixos-rebuild (for Claude Code automation)
-  security.sudo.extraRules = [
-    {
-      users = [ "sasha" ];
-      commands = [
-        {
-          command = "/run/current-system/sw/bin/nixos-rebuild";
-          options = [ "NOPASSWD" ];
-        }
-      ];
-    }
-  ];
-
-  # ==========================================================================
-  # Audio
-  # ==========================================================================
-
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
-  # ==========================================================================
-  # Services
-  # ==========================================================================
-
-  services.printing.enable = true;
-
-  # ==========================================================================
-  # Virtualisation
-  # ==========================================================================
-
-  virtualisation.docker.enable = true;
 
   # ==========================================================================
   # Users
@@ -186,46 +96,12 @@
   };
 
   # ==========================================================================
-  # Programs
-  # ==========================================================================
-
-  programs.fish.enable = true;
-
-  # ydotool for voxtype (wtype doesn't work on KDE Wayland)
-  programs.ydotool.enable = true;
-
-  programs._1password.enable = true;
-  programs._1password-gui = {
-    enable = true;
-    polkitPolicyOwners = [ "sasha" ];
-  };
-
-  programs.nix-ld.enable = true;
-  programs.nix-ld.libraries = with pkgs; [
-    stdenv.cc.cc.lib
-    zlib
-    glib
-    openssl
-  ];
-
-  # ==========================================================================
   # System Packages
   # ==========================================================================
-
-  nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
     vim
     git
-  ];
-
-  # ==========================================================================
-  # Nix Settings
-  # ==========================================================================
-
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
   ];
 
   # ==========================================================================
