@@ -1,32 +1,45 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-## Overview
-
-NixOS dotfiles for a Framework 13 laptop running Plasma 6 desktop. Uses Home Manager for user configuration.
+NixOS dotfiles for Framework 13 laptop. Plasma 6 desktop, Home Manager for user config.
 
 ## Commands
 
-Rebuild and switch to new configuration (run from this directory):
-
 ```sh
-nrs
+nrs                    # Rebuild and switch
+nix flake update && nrs  # Update packages
 ```
 
-## Architecture
+## Structure
 
-- `configuration.nix` - Main system config (boot, networking, desktop, audio, users, system packages)
-- `home.nix` - Home Manager config, manages dotfiles via `home.file` and user programs (git, ssh)
-- `firefox.nix` - Firefox policies, extensions, and privacy settings
-- `hardware-configuration.nix` - Auto-generated hardware config (do not edit manually)
-- `sources/` - Raw config files deployed to home directory by Home Manager
-  - `scripts/` - Shell scripts deployed to `~/.local/bin`
-  - Config files for fish, zed, ghostty, tridactyl, 1password
+```
+hosts/fw13/            # Host-specific (hardware, user packages)
+modules/nixos/         # System modules (boot, desktop, networking, nix, etc.)
+modules/home/          # Home Manager modules (shell, desktop, editors, tools)
+home.nix               # Home Manager entry point
+firefox.nix            # Firefox policies/extensions
+sources/               # Raw config files deployed via home.file
+```
 
-## Key Patterns
+## Key Files
 
-- User packages go in `users.users.sasha.packages` in `configuration.nix`
-- Dotfiles are managed declaratively via `home.file` in `home.nix`
-- SSH authentication uses 1Password agent
-- Git commits are signed with SSH key via 1Password
+| What | Where |
+|------|-------|
+| User packages | `hosts/fw13/default.nix` |
+| System services | `modules/nixos/services.nix` |
+| Fish aliases | `modules/home/shell.nix` |
+| Git/SSH config | `modules/home/shell.nix` |
+| Plasma hotkeys | `modules/home/desktop.nix` |
+| Nix settings, GC, auto-upgrade | `modules/nixos/nix.nix` |
+
+## Patterns
+
+- **Modular**: Each concern in its own `.nix` file
+- **Host-based**: `hosts/<name>/` for multi-machine support
+- **Declarative aliases**: Fish aliases in `shellAliases`, not scripts
+- **useGlobalPkgs**: Home Manager shares system's pkgs (for overlays, allowUnfree)
+- **Git signing**: SSH key via 1Password (`op-ssh-sign`)
+
+## Adding a Host
+
+1. Create `hosts/<name>/default.nix` and `hardware-configuration.nix`
+2. Add to `flake.nix`: `nixosConfigurations.<name> = ...`
