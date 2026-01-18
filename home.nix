@@ -1,8 +1,4 @@
-{
-  pkgs,
-  lib,
-  ...
-}:
+{ ... }:
 
 {
   home-manager.backupFileExtension = "bak";

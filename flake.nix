@@ -1,7 +1,6 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
@@ -23,7 +22,6 @@
   outputs =
     {
       nixpkgs,
-      nixpkgs-unstable,
       home-manager,
       plasma-manager,
       voxtype,
@@ -31,7 +29,6 @@
     }:
     let
       system = "x86_64-linux";
-      unstable = import nixpkgs-unstable { inherit system; };
     in
     {
       nixosConfigurations.fw13 = nixpkgs.lib.nixosSystem {
@@ -45,8 +42,7 @@
             ];
             nixpkgs.overlays = [
               (final: prev: {
-                voxtype = voxtype.packages.${prev.system}.default;
-                unstable = unstable;
+                voxtype = voxtype.packages.${prev.stdenv.hostPlatform.system}.default;
               })
             ];
           }
