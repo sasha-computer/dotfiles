@@ -2,7 +2,7 @@
 
 {
   # ==========================================================================
-  # Display & Desktop Environment
+  # X Server Basics (needed for XWayland)
   # ==========================================================================
 
   services.xserver.enable = true;
@@ -11,16 +11,8 @@
     variant = "";
   };
 
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
-
-  # Exclude unwanted KDE apps
-  environment.plasma6.excludePackages = with pkgs.kdePackages; [
-    kate
-  ];
-
   # ==========================================================================
-  # Audio (PipeWire)
+  # Audio (PipeWire) - Shared between all desktop environments
   # ==========================================================================
 
   services.pulseaudio.enable = false;
