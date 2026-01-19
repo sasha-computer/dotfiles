@@ -52,7 +52,7 @@
       # ============================================================
       # SWITCH DESKTOP HERE: "plasma" or "niri"
       # ============================================================
-      desktopEnvironment = "plasma";
+      desktopEnvironment = "niri";
     in
     {
       nixosConfigurations.fw13 = nixpkgs.lib.nixosSystem {

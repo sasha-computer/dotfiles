@@ -70,7 +70,7 @@
       # ------------------------------------------------------------------
       binds = {
         # Terminal
-        "Mod+Return".action.spawn = [ "ghostty" ];
+        "Mod+Return".action.spawn = [ "warp-terminal" ];
         "Mod+T".action.spawn = [ "ghostty" ];
 
         # Application Launcher
