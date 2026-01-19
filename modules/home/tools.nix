@@ -32,9 +32,4 @@
     ".config/voxtype/config.toml".source = ../../sources/voxtype/config.toml;
   };
 
-  # ==========================================================================
-  # Services
-  # ==========================================================================
-
-  services.syncthing.enable = true;
 }

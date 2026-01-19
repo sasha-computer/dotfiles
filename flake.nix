@@ -28,6 +28,11 @@
       url = "github:peteonrails/voxtype";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    helium = {
+      url = "github:AlvaroParker/helium-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -38,6 +43,7 @@
       niri-flake,
       dms,
       voxtype,
+      helium,
       ...
     }:
     let
@@ -76,6 +82,7 @@
             nixpkgs.overlays = [
               (final: prev: {
                 voxtype = voxtype.packages.${prev.stdenv.hostPlatform.system}.default;
+                helium = helium.packages.${prev.stdenv.hostPlatform.system}.default;
               })
               niri-flake.overlays.niri
             ];

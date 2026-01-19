@@ -76,6 +76,8 @@
       rclone
       vlc
       localsend
+      todoist-electron
+      helium
 
       # Games
       bolt-launcher
