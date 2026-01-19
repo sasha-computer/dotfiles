@@ -1,8 +1,11 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   # Printing
-  services.printing.enable = true;
+  services.printing = {
+    enable = true;
+    drivers = [ pkgs.brlaser ];
+  };
 
   # Avahi (network discovery)
   services.avahi = {

@@ -7,6 +7,8 @@
 
     settings = {
       input = {
+        mod-key = "Alt";
+        mod-key-nested = "Super";
         keyboard = {
           xkb.layout = "us";
           repeat-delay = 300;
@@ -41,12 +43,13 @@
 
       layout = {
         gaps = 8;
-        border = {
-          width = 2;
+        border.enable = false;
+        focus-ring = {
+          enable = true;
+          width = 3;
           active.color = "#7aa2f7";
-          inactive.color = "#565f89";
+          inactive.color = "transparent";
         };
-        focus-ring.enable = false;
         preset-column-widths = [
           { proportion = 1.0 / 3.0; }
           { proportion = 1.0 / 2.0; }
@@ -57,16 +60,18 @@
 
       spawn-at-startup = [
         { command = [ "${pkgs.xwayland-satellite}/bin/xwayland-satellite" ]; }
+        { command = [ "1password" "--silent" ]; }
       ];
 
       binds = with config.lib.niri.actions; {
-        "Mod+Return".action = spawn "warp-terminal";
+        "Mod+Return".action = spawn "env" "-u" "WAYLAND_DISPLAY" "warp-terminal";
         "Mod+T".action = spawn "ghostty";
         "Mod+D".action = spawn "fuzzel";
 
         "Mod+Q".action = close-window;
         "Mod+F".action = maximize-column;
         "Mod+Shift+F".action = fullscreen-window;
+        "Mod+Tab".action = toggle-overview;
 
         "Mod+H".action = focus-column-left;
         "Mod+J".action = focus-window-down;
@@ -96,14 +101,26 @@
 
         "Mod+Minus".action = set-column-width "-10%";
         "Mod+Equal".action = set-column-width "+10%";
+        "Mod+R".action = switch-preset-column-width;
 
         "Mod+Shift+E".action = quit;
         "Mod+Shift+P".action = spawn "systemctl" "poweroff";
+
+        # Screenshot selection to clipboard (macOS-style)
+        "Alt+Shift+4".action = spawn "sh" "-c" "grim -g \"$(slurp)\" - | wl-copy";
 
         # Disable laptop display (when TV is connected)
         "Mod+Shift+M".action = spawn "niri" "msg" "output" "eDP-1" "off";
         # Re-enable laptop display
         "Mod+Shift+N".action = spawn "niri" "msg" "output" "eDP-1" "on";
+
+        # Ctrl + vertical scroll: switch workspaces
+        "Ctrl+WheelScrollDown".action = focus-workspace-down;
+        "Ctrl+WheelScrollUp".action = focus-workspace-up;
+
+        # Ctrl + horizontal scroll: focus windows left/right
+        "Ctrl+WheelScrollLeft".action = focus-column-left;
+        "Ctrl+WheelScrollRight".action = focus-column-right;
       };
 
       window-rules = [
