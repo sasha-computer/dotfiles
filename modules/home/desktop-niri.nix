@@ -144,12 +144,7 @@
     niri = {
       enableKeybinds = false;  # We define our own keybinds above
       enableSpawn = true;
-      includes = {
-        enable = true;
-        override = true;
-        originalFileName = "hm";
-        filesToInclude = [ "alttab" "colors" "layout" ];  # Removed "binds" to avoid conflicts
-      };
+      includes.enable = false;
     };
   };
 
