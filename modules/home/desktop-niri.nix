@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
 
 {
   programs.niri = {
@@ -59,28 +59,28 @@
         { command = [ "${pkgs.xwayland-satellite}/bin/xwayland-satellite" ]; }
       ];
 
-      binds = {
-        "Mod+Return".action.spawn = [ "warp-terminal" ];
-        "Mod+T".action.spawn = [ "ghostty" ];
-        "Mod+D".action.spawn = [ "fuzzel" ];
+      binds = with config.lib.niri.actions; {
+        "Mod+Return".action = spawn "warp-terminal";
+        "Mod+T".action = spawn "ghostty";
+        "Mod+D".action = spawn "fuzzel";
 
-        "Mod+Q".action.close-window = [];
-        "Mod+F".action.maximize-column = [];
-        "Mod+Shift+F".action.fullscreen-window = [];
+        "Mod+Q".action = close-window;
+        "Mod+F".action = maximize-column;
+        "Mod+Shift+F".action = fullscreen-window;
 
-        "Mod+H".action.focus-column-left = [];
-        "Mod+J".action.focus-window-down = [];
-        "Mod+K".action.focus-window-up = [];
-        "Mod+L".action.focus-column-right = [];
-        "Mod+Left".action.focus-column-left = [];
-        "Mod+Down".action.focus-window-down = [];
-        "Mod+Up".action.focus-window-up = [];
-        "Mod+Right".action.focus-column-right = [];
+        "Mod+H".action = focus-column-left;
+        "Mod+J".action = focus-window-down;
+        "Mod+K".action = focus-window-up;
+        "Mod+L".action = focus-column-right;
+        "Mod+Left".action = focus-column-left;
+        "Mod+Down".action = focus-window-down;
+        "Mod+Up".action = focus-window-up;
+        "Mod+Right".action = focus-column-right;
 
-        "Mod+Shift+H".action.move-column-left = [];
-        "Mod+Shift+J".action.move-window-down = [];
-        "Mod+Shift+K".action.move-window-up = [];
-        "Mod+Shift+L".action.move-column-right = [];
+        "Mod+Shift+H".action = move-column-left;
+        "Mod+Shift+J".action = move-window-down;
+        "Mod+Shift+K".action = move-window-up;
+        "Mod+Shift+L".action = move-column-right;
 
         "Mod+1".action.focus-workspace = 1;
         "Mod+2".action.focus-workspace = 2;
@@ -94,16 +94,16 @@
         "Mod+Shift+4".action.move-column-to-workspace = 4;
         "Mod+Shift+5".action.move-column-to-workspace = 5;
 
-        "Mod+Minus".action.set-column-width = "-10%";
-        "Mod+Equal".action.set-column-width = "+10%";
+        "Mod+Minus".action = set-column-width "-10%";
+        "Mod+Equal".action = set-column-width "+10%";
 
-        "Mod+Shift+E".action.quit = [];
-        "Mod+Shift+P".action.spawn = [ "systemctl" "poweroff" ];
+        "Mod+Shift+E".action = quit;
+        "Mod+Shift+P".action = spawn "systemctl" "poweroff";
 
         # Disable laptop display (when TV is connected)
-        "Mod+Shift+M".action.spawn = [ "niri" "msg" "output" "eDP-1" "off" ];
+        "Mod+Shift+M".action = spawn "niri" "msg" "output" "eDP-1" "off";
         # Re-enable laptop display
-        "Mod+Shift+N".action.spawn = [ "niri" "msg" "output" "eDP-1" "on" ];
+        "Mod+Shift+N".action = spawn "niri" "msg" "output" "eDP-1" "on";
       };
 
       window-rules = [
@@ -142,13 +142,13 @@
     enableClipboardPaste = true;
 
     niri = {
-      enableKeybinds = true;
+      enableKeybinds = false;  # We define our own keybinds above
       enableSpawn = true;
       includes = {
         enable = true;
         override = true;
         originalFileName = "hm";
-        filesToInclude = [ "alttab" "binds" "colors" "layout" ];
+        filesToInclude = [ "alttab" "colors" "layout" ];  # Removed "binds" to avoid conflicts
       };
     };
   };

@@ -12,7 +12,7 @@
   services.greetd = {
     enable = true;
     settings.default_session = {
-      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd niri-session";
+      command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd niri-session";
       user = "greeter";
     };
   };
@@ -22,6 +22,7 @@
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
+    config.common.default = "*";  # Use first available portal implementation
   };
 
   # DMS dependencies

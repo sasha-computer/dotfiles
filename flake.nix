@@ -38,7 +38,7 @@
     }:
     let
       system = "x86_64-linux";
-      desktopEnvironment = "niri"; # or "plasma"
+      desktopEnvironment = "niri"; # "plasma" or "niri"
     in
     {
       nixosConfigurations.fw13 = nixpkgs.lib.nixosSystem {
