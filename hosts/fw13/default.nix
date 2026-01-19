@@ -83,14 +83,6 @@
       bolt-launcher
       runelite
 
-      # Voice to text
-      voxtype
-      wtype # for typing on Wayland
-      wl-clipboard # for clipboard on Wayland
-
-      # Screenshots
-      flameshot
-
       # Tools
       unzip
       dust

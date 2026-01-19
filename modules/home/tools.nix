@@ -27,9 +27,5 @@
       source = ../../sources/claude/context;
       recursive = true;
     };
-
-    # Voxtype (voice-to-text)
-    ".config/voxtype/config.toml".source = ../../sources/voxtype/config.toml;
   };
-
 }

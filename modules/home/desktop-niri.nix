@@ -1,18 +1,11 @@
 { pkgs, lib, ... }:
 
 {
-  # ==========================================================================
-  # Niri Configuration (via niri-flake)
-  # ==========================================================================
-
   programs.niri = {
     enable = true;
     package = pkgs.niri-stable;
 
     settings = {
-      # ------------------------------------------------------------------
-      # Input Configuration
-      # ------------------------------------------------------------------
       input = {
         keyboard = {
           xkb.layout = "us";
@@ -22,33 +15,38 @@
         touchpad = {
           tap = true;
           natural-scroll = true;
-          dwt = true; # disable while typing
+          dwt = true;
         };
-        mouse = {
-          natural-scroll = false;
+        mouse.natural-scroll = false;
+      };
+
+      outputs = {
+        "DP-4" = {
+          scale = 1.5;
+          mode = {
+            width = 3840;
+            height = 2160;
+            refresh = 120.0;
+          };
+        };
+        "eDP-1" = {
+          scale = 1.7;
+          mode = {
+            width = 2880;
+            height = 1920;
+            refresh = 120.0;
+          };
         };
       };
 
-      # ------------------------------------------------------------------
-      # Output Configuration (Framework 13 display)
-      # ------------------------------------------------------------------
-      outputs."eDP-1" = {
-        scale = 1.5; # Adjust for your preference
-      };
-
-      # ------------------------------------------------------------------
-      # Layout Settings
-      # ------------------------------------------------------------------
       layout = {
         gaps = 8;
         border = {
           width = 2;
-          active.color = "#7aa2f7"; # Tokyo Night blue
+          active.color = "#7aa2f7";
           inactive.color = "#565f89";
         };
-        focus-ring = {
-          enable = false; # DMS handles focus indication
-        };
+        focus-ring.enable = false;
         preset-column-widths = [
           { proportion = 1.0 / 3.0; }
           { proportion = 1.0 / 2.0; }
@@ -57,78 +55,57 @@
         default-column-width = { proportion = 1.0 / 2.0; };
       };
 
-      # ------------------------------------------------------------------
-      # Spawn at Startup
-      # ------------------------------------------------------------------
       spawn-at-startup = [
-        # XWayland for legacy X11 apps
         { command = [ "${pkgs.xwayland-satellite}/bin/xwayland-satellite" ]; }
       ];
 
-      # ------------------------------------------------------------------
-      # Key Bindings
-      # ------------------------------------------------------------------
       binds = {
-        # Terminal
         "Mod+Return".action.spawn = [ "warp-terminal" ];
         "Mod+T".action.spawn = [ "ghostty" ];
-
-        # Application Launcher
         "Mod+D".action.spawn = [ "fuzzel" ];
 
-        # Screenshots (flameshot)
-        "Shift+Alt+4".action.spawn = [ "flameshot" "gui" "--clipboard" ];
+        "Mod+Q".action.close-window = [];
+        "Mod+F".action.maximize-column = [];
+        "Mod+Shift+F".action.fullscreen-window = [];
 
-        # Voxtype toggle
-        "Mod+V".action.spawn = [ "voxtype" "record" "toggle" ];
+        "Mod+H".action.focus-column-left = [];
+        "Mod+J".action.focus-window-down = [];
+        "Mod+K".action.focus-window-up = [];
+        "Mod+L".action.focus-column-right = [];
+        "Mod+Left".action.focus-column-left = [];
+        "Mod+Down".action.focus-window-down = [];
+        "Mod+Up".action.focus-window-up = [];
+        "Mod+Right".action.focus-column-right = [];
 
-        # Window Management
-        "Mod+Q".action = "close-window";
-        "Mod+F".action = "maximize-column";
-        "Mod+Shift+F".action = "fullscreen-window";
+        "Mod+Shift+H".action.move-column-left = [];
+        "Mod+Shift+J".action.move-window-down = [];
+        "Mod+Shift+K".action.move-window-up = [];
+        "Mod+Shift+L".action.move-column-right = [];
 
-        # Focus Movement
-        "Mod+H".action = "focus-column-left";
-        "Mod+J".action = "focus-window-down";
-        "Mod+K".action = "focus-window-up";
-        "Mod+L".action = "focus-column-right";
-        "Mod+Left".action = "focus-column-left";
-        "Mod+Down".action = "focus-window-down";
-        "Mod+Up".action = "focus-window-up";
-        "Mod+Right".action = "focus-column-right";
+        "Mod+1".action.focus-workspace = 1;
+        "Mod+2".action.focus-workspace = 2;
+        "Mod+3".action.focus-workspace = 3;
+        "Mod+4".action.focus-workspace = 4;
+        "Mod+5".action.focus-workspace = 5;
 
-        # Window Movement
-        "Mod+Shift+H".action = "move-column-left";
-        "Mod+Shift+J".action = "move-window-down";
-        "Mod+Shift+K".action = "move-window-up";
-        "Mod+Shift+L".action = "move-column-right";
+        "Mod+Shift+1".action.move-column-to-workspace = 1;
+        "Mod+Shift+2".action.move-column-to-workspace = 2;
+        "Mod+Shift+3".action.move-column-to-workspace = 3;
+        "Mod+Shift+4".action.move-column-to-workspace = 4;
+        "Mod+Shift+5".action.move-column-to-workspace = 5;
 
-        # Workspace Navigation
-        "Mod+1".action = { focus-workspace = 1; };
-        "Mod+2".action = { focus-workspace = 2; };
-        "Mod+3".action = { focus-workspace = 3; };
-        "Mod+4".action = { focus-workspace = 4; };
-        "Mod+5".action = { focus-workspace = 5; };
+        "Mod+Minus".action.set-column-width = "-10%";
+        "Mod+Equal".action.set-column-width = "+10%";
 
-        # Move to Workspace
-        "Mod+Shift+1".action = { move-column-to-workspace = 1; };
-        "Mod+Shift+2".action = { move-column-to-workspace = 2; };
-        "Mod+Shift+3".action = { move-column-to-workspace = 3; };
-        "Mod+Shift+4".action = { move-column-to-workspace = 4; };
-        "Mod+Shift+5".action = { move-column-to-workspace = 5; };
-
-        # Column Width
-        "Mod+Minus".action = "set-column-width" "-10%";
-        "Mod+Equal".action = "set-column-width" "+10%";
-
-        # Session
-        "Mod+Shift+E".action = "quit";
+        "Mod+Shift+E".action.quit = [];
         "Mod+Shift+P".action.spawn = [ "systemctl" "poweroff" ];
+
+        # Disable laptop display (when TV is connected)
+        "Mod+Shift+M".action.spawn = [ "niri" "msg" "output" "eDP-1" "off" ];
+        # Re-enable laptop display
+        "Mod+Shift+N".action.spawn = [ "niri" "msg" "output" "eDP-1" "on" ];
       };
 
-      # ------------------------------------------------------------------
-      # Window Rules
-      # ------------------------------------------------------------------
       window-rules = [
         {
           matches = [{ app-id = "^firefox$"; }];
@@ -138,18 +115,11 @@
           matches = [{ app-id = "^1password$"; }];
           open-floating = true;
         }
-        {
-          matches = [{ app-id = "^flameshot$"; }];
-          open-floating = true;
-        }
       ];
 
-      # ------------------------------------------------------------------
-      # Animations
-      # ------------------------------------------------------------------
       animations = {
         slowdown = 1.0;
-        window-open.spring = {
+        window-open.kind.spring = {
           damping-ratio = 0.8;
           stiffness = 500;
           epsilon = 0.0001;
@@ -158,20 +128,12 @@
     };
   };
 
-  # ==========================================================================
-  # DankMaterialShell Configuration
-  # ==========================================================================
-
   programs.dank-material-shell = {
     enable = true;
-
-    # Systemd service management
     systemd = {
-      enable = false; # Using niri.enableSpawn instead
+      enable = false;
       restartIfChanged = true;
     };
-
-    # Feature toggles
     enableSystemMonitoring = true;
     enableVPN = false;
     enableDynamicTheming = true;
@@ -179,34 +141,22 @@
     enableCalendarEvents = false;
     enableClipboardPaste = true;
 
-    # Niri-specific integration
     niri = {
       enableKeybinds = true;
       enableSpawn = true;
-
       includes = {
         enable = true;
         override = true;
         originalFileName = "hm";
-        filesToInclude = [
-          "alttab"
-          "binds"
-          "colors"
-          "layout"
-        ];
+        filesToInclude = [ "alttab" "binds" "colors" "layout" ];
       };
     };
   };
-
-  # ==========================================================================
-  # Additional Niri Companion Tools
-  # ==========================================================================
 
   home.packages = with pkgs; [
     fuzzel
     wl-clipboard
     cliphist
-    flameshot
     grim
     slurp
     swaybg

@@ -33,16 +33,5 @@
       X-systemd-Restart=on-failure
       X-systemd-RestartSec=5
     '';
-
-    # Autostart voxtype daemon (voice-to-text)
-    ".config/autostart/voxtype.desktop".text = ''
-      [Desktop Entry]
-      Name=Voxtype
-      Exec=voxtype daemon
-      Terminal=false
-      Type=Application
-      StartupNotify=false
-      X-GNOME-Autostart-enabled=true
-    '';
   };
 }

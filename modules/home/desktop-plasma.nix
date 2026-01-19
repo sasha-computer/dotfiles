@@ -17,24 +17,6 @@
     configFile."kwinrc"."Windows"."FocusStealingPreventionLevel" = 0;
 
     hotkeys.commands = {
-      "flameshot-clipboard" = {
-        name = "Screenshot to clipboard";
-        key = "Shift+Alt+4";
-        command = "flameshot gui --clipboard";
-      };
-      "voxtype-toggle" = {
-        name = "Voice-to-text toggle";
-        key = "Meta+V";
-        command = "voxtype record toggle";
-      };
-    };
-
-    # Klipper clipboard shortcuts - avoid conflict with Meta+V (voxtype)
-    configFile."kglobalshortcutsrc"."plasmashell"."clipboard_action" = {
-      value = "Meta+Shift+V,Meta+Ctrl+X,Clipboard History Popup";
-    };
-    configFile."kglobalshortcutsrc"."plasmashell"."show-on-mouse-pos" = {
-      value = "none,Meta+V,Show Clipboard Items at Mouse Position";
     };
   };
 }
