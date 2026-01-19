@@ -71,6 +71,7 @@
       discord
 
       # Applications
+      nautilus
       obsidian
       spotify
       rclone

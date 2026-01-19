@@ -102,6 +102,7 @@
         "Mod+Minus".action = set-column-width "-10%";
         "Mod+Equal".action = set-column-width "+10%";
         "Mod+R".action = switch-preset-column-width;
+        "Mod+C".action = center-column;
 
         "Mod+Shift+E".action = quit;
         "Mod+Shift+P".action = spawn "systemctl" "poweroff";
