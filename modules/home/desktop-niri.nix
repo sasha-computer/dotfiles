@@ -1,6 +1,18 @@
 { pkgs, lib, config, ... }:
 
-{
+let
+  focus-or-spawn = pkgs.writeShellScriptBin "focus-or-spawn" ''
+    APP_ID="$1"
+    shift
+    COMMAND=("$@")
+    WINDOW_ID=$(niri msg --json windows | ${pkgs.jq}/bin/jq -r ".[] | select(.app_id == \"$APP_ID\") | .id" | head -1)
+    if [ -n "$WINDOW_ID" ]; then
+      niri msg action focus-window --id "$WINDOW_ID"
+    else
+      "''${COMMAND[@]}" &
+    fi
+  '';
+in {
   programs.niri = {
     enable = true;
     package = pkgs.niri-stable;
@@ -59,16 +71,18 @@
       };
 
       spawn-at-startup = [
-        { command = [ "${pkgs.xwayland-satellite}/bin/xwayland-satellite" ]; }
         { command = [ "1password" "--silent" ]; }
       ];
 
       binds = with config.lib.niri.actions; {
-        "Mod+Return".action = spawn "env" "-u" "WAYLAND_DISPLAY" "warp-terminal";
-        "Mod+T".action = spawn "ghostty";
+        "Mod+Return".action = spawn "ghostty";
         "Mod+D".action = spawn "fuzzel";
+        "Mod+W".action = spawn "${focus-or-spawn}/bin/focus-or-spawn" "firefox" "firefox";
+        "Mod+S".action = spawn "${focus-or-spawn}/bin/focus-or-spawn" "Slack" "slack";
+        "Mod+E".action = spawn "${focus-or-spawn}/bin/focus-or-spawn" "com.mitchellh.ghostty" "ghostty";
 
         "Mod+Q".action = close-window;
+        "Mod+Grave".action = focus-window-previous;
         "Mod+F".action = maximize-column;
         "Mod+Shift+F".action = fullscreen-window;
         "Mod+Tab".action = toggle-overview;

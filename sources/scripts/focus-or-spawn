@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Usage: focus-or-spawn <app-id> <command...>
+# Focuses existing window with app-id, or spawns command if none exists
+
+APP_ID="$1"
+shift
+COMMAND=("$@")
+
+WINDOW_ID=$(niri msg --json windows | jq -r ".[] | select(.app_id == \"$APP_ID\") | .id" | head -1)
+
+if [ -n "$WINDOW_ID" ]; then
+    niri msg action focus-window --id "$WINDOW_ID"
+else
+    "${COMMAND[@]}" &
+fi
