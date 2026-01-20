@@ -136,9 +136,31 @@ in {
         # Ctrl + horizontal scroll: focus windows left/right
         "Ctrl+WheelScrollLeft".action = focus-column-left;
         "Ctrl+WheelScrollRight".action = focus-column-right;
+
+        # Framework 13 function keys
+        # Audio (F1-F3)
+        "XF86AudioMute".action = spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle";
+        "XF86AudioLowerVolume".action = spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-";
+        "XF86AudioRaiseVolume".action = spawn "wpctl" "set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "5%+";
+
+        # Mic mute (F4)
+        "XF86AudioMicMute".action = spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle";
+
+        # Brightness (F7-F8)
+        "XF86MonBrightnessDown".action = spawn "brightnessctl" "set" "5%-";
+        "XF86MonBrightnessUp".action = spawn "brightnessctl" "set" "5%+";
+
+        # Media controls
+        "XF86AudioPlay".action = spawn "playerctl" "play-pause";
+        "XF86AudioPrev".action = spawn "playerctl" "previous";
+        "XF86AudioNext".action = spawn "playerctl" "next";
       };
 
       window-rules = [
+        {
+          # All windows open maximized by default
+          open-maximized = true;
+        }
         {
           matches = [{ app-id = "^firefox$"; }];
           default-column-width = { proportion = 0.6; };
@@ -187,5 +209,7 @@ in {
     grim
     slurp
     swaybg
+    brightnessctl
+    playerctl
   ];
 }
