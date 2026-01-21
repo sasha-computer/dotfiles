@@ -16,4 +16,7 @@
 
   # Firmware updates (important for Framework laptop)
   services.fwupd.enable = true;
+
+  # UPower (battery status for status bars)
+  services.upower.enable = true;
 }
