@@ -19,4 +19,7 @@
 
   # UPower (battery status for status bars)
   services.upower.enable = true;
+
+  # Tailscale VPN
+  services.tailscale.enable = true;
 }
