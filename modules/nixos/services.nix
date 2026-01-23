@@ -1,6 +1,28 @@
 { pkgs, ... }:
 
 {
+  # ==========================================================================
+  # Suspend/Resume fixes for Framework 13
+  # ==========================================================================
+
+  # Fix touchpad not working after resume (known Framework 13 issue)
+  systemd.services.fix-touchpad-resume = {
+    description = "Reload touchpad driver after resume";
+    after = [ "suspend.target" "hibernate.target" "hybrid-sleep.target" ];
+    wantedBy = [ "suspend.target" "hibernate.target" "hybrid-sleep.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.kmod}/bin/modprobe -r i2c_hid_acpi && ${pkgs.kmod}/bin/modprobe i2c_hid_acpi'";
+    };
+  };
+
+  # Ensure lid close triggers suspend
+  services.logind.settings.Login = {
+    HandleLidSwitch = "suspend";
+    HandleLidSwitchExternalPower = "suspend";
+  };
+
+  # ==========================================================================
   # Printing
   services.printing = {
     enable = true;

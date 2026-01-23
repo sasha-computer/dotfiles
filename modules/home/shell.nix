@@ -61,6 +61,7 @@
       gc = "git checkout";
       gcb = "git checkout -b";
       gcl = "git clone";
+      grv = "git remote -v";
 
       # Navigation & Tools
       ll = "ls -l";

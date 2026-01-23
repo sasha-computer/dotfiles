@@ -120,6 +120,7 @@ in {
 
         "Mod+Shift+E".action = quit;
         "Mod+Shift+P".action = spawn "systemctl" "poweroff";
+        "Mod+Escape".action = spawn "swaylock" "-f";  # Lock screen
 
         # Screenshot selection to clipboard (macOS-style)
         "Alt+Shift+4".action = spawn "sh" "-c" "grim -g \"$(slurp)\" - | wl-copy";
@@ -209,7 +210,23 @@ in {
     grim
     slurp
     swaybg
+    swaylock
     brightnessctl
     playerctl
   ];
+
+  # Lock screen before suspend (user service has access to Wayland session)
+  systemd.user.services.lock-before-sleep = {
+    Unit = {
+      Description = "Lock screen before suspend";
+      Before = [ "sleep.target" ];
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.swaylock}/bin/swaylock -f";
+    };
+    Install = {
+      WantedBy = [ "sleep.target" ];
+    };
+  };
 }
