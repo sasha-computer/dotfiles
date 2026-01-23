@@ -1,4 +1,4 @@
 {
   "alwaysThinkingEnabled": true,
-  "cleanupPeriodDays": 0
+  "cleanupPeriodDays": 365
 }
