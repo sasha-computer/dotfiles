@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-NixOS dotfiles for Framework 13 laptop. Plasma 6 desktop, Home Manager for user config.
+NixOS dotfiles for Framework 13 laptop. Niri (Wayland compositor) + DMS, Home Manager for user config.
 
 ## Commands
 
@@ -28,7 +28,7 @@ sources/               # Raw config files deployed via home.file
 | System services | `modules/nixos/services.nix` |
 | Fish aliases | `modules/home/shell.nix` |
 | Git/SSH config | `modules/home/shell.nix` |
-| Plasma hotkeys | `modules/home/desktop.nix` |
+| Niri/desktop config | `modules/home/desktop.nix` |
 | Nix settings, GC, auto-upgrade | `modules/nixos/nix.nix` |
 
 ## Practices
