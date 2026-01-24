@@ -44,4 +44,11 @@
 
   # Tailscale VPN
   services.tailscale.enable = true;
+
+  # ==========================================================================
+  # Removable Media
+  # ==========================================================================
+
+  # udisks2 backend for USB mounting (udiskie uses this)
+  services.udisks2.enable = true;
 }

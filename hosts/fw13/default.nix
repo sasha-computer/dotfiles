@@ -71,7 +71,7 @@
       discord
 
       # Applications
-      nautilus
+      kdePackages.dolphin
       obsidian
       spotify
       rclone
@@ -83,6 +83,9 @@
       # Games
       bolt-launcher
       runelite
+
+      # XWayland for Electron apps (Cursor, etc.)
+      xwayland-satellite
 
       # Tools
       unzip

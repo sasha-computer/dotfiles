@@ -71,6 +71,7 @@ in {
       };
 
       spawn-at-startup = [
+        { command = [ "xwayland-satellite" ]; }
         { command = [ "1password" "--silent" ]; }
       ];
 
@@ -121,6 +122,7 @@ in {
         "Mod+Shift+E".action = quit;
         "Mod+Shift+P".action = spawn "systemctl" "poweroff";
         "Mod+Escape".action = spawn "swaylock" "-f";  # Lock screen
+        "Mod+Shift+T".action = spawn "dms" "ipc" "call" "theme" "toggle";  # Toggle dark/light
 
         # Screenshot selection to clipboard (macOS-style)
         "Alt+Shift+4".action = spawn "sh" "-c" "grim -g \"$(slurp)\" - | wl-copy";
@@ -170,6 +172,14 @@ in {
           matches = [{ app-id = "^1password$"; }];
           open-floating = true;
         }
+        {
+          matches = [{ app-id = "^Slack$"; }];
+          open-on-workspace = "3";
+        }
+        {
+          matches = [{ app-id = "^org\\.telegram\\.desktop$"; }];
+          open-on-workspace = "3";
+        }
       ];
 
       animations = {
@@ -214,6 +224,69 @@ in {
     brightnessctl
     playerctl
   ];
+
+  # USB auto-mount daemon
+  services.udiskie = {
+    enable = true;
+    tray = "auto";  # Show tray icon when devices present
+    notify = true;  # Desktop notifications on mount/unmount
+  };
+
+  # Gnome keyring for secret storage (replaces kwallet for Signal, etc.)
+  services.gnome-keyring = {
+    enable = true;
+    components = [ "secrets" ];
+  };
+
+  # Notification daemon for Wayland
+  services.mako = {
+    enable = true;
+    settings.default-timeout = 5000;
+  };
+
+  # Signal: use gnome-keyring instead of kwallet
+  xdg.desktopEntries.signal-desktop = {
+    name = "Signal";
+    exec = "signal-desktop --password-store=\"gnome-libsecret\" %U";
+    icon = "signal-desktop";
+    type = "Application";
+    categories = [ "Network" "InstantMessaging" ];
+  };
+
+  # Auto dark mode: switch to dark at 5pm, light at 7am
+  systemd.user.services.dms-dark-mode = {
+    Unit.Description = "Switch DMS to dark mode";
+    Service = {
+      Type = "oneshot";
+      ExecStart = "dms ipc call theme dark";
+    };
+  };
+
+  systemd.user.timers.dms-dark-mode = {
+    Unit.Description = "Switch to dark mode at 5pm";
+    Timer = {
+      OnCalendar = "*-*-* 17:00:00";
+      Persistent = true;  # Run if missed (e.g., laptop was asleep)
+    };
+    Install.WantedBy = [ "timers.target" ];
+  };
+
+  systemd.user.services.dms-light-mode = {
+    Unit.Description = "Switch DMS to light mode";
+    Service = {
+      Type = "oneshot";
+      ExecStart = "dms ipc call theme light";
+    };
+  };
+
+  systemd.user.timers.dms-light-mode = {
+    Unit.Description = "Switch to light mode at 7am";
+    Timer = {
+      OnCalendar = "*-*-* 07:00:00";
+      Persistent = true;
+    };
+    Install.WantedBy = [ "timers.target" ];
+  };
 
   # Lock screen before suspend (user service has access to Wayland session)
   systemd.user.services.lock-before-sleep = {
