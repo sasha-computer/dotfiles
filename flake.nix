@@ -7,6 +7,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -30,6 +35,7 @@
     {
       nixpkgs,
       home-manager,
+      nix-darwin,
       plasma-manager,
       niri-flake,
       dms,
@@ -37,12 +43,17 @@
       ...
     }:
     let
-      system = "x86_64-linux";
+      linuxSystem = "x86_64-linux";
+      darwinSystem = "aarch64-darwin";
       desktopEnvironment = "niri"; # "plasma" or "niri"
     in
     {
+      # ==========================================================================
+      # NixOS Configuration (Linux)
+      # ==========================================================================
+
       nixosConfigurations.fw13 = nixpkgs.lib.nixosSystem {
-        inherit system;
+        system = linuxSystem;
         specialArgs = { inherit desktopEnvironment; };
         modules = [
           ./hosts/fw13
@@ -66,6 +77,19 @@
               niri-flake.overlays.niri
             ];
           }
+        ];
+      };
+
+      # ==========================================================================
+      # Darwin Configuration (macOS)
+      # ==========================================================================
+
+      darwinConfigurations.m1-max = nix-darwin.lib.darwinSystem {
+        system = darwinSystem;
+        modules = [
+          ./hosts/m1-max
+          ./home-darwin.nix
+          home-manager.darwinModules.home-manager
         ];
       };
     };

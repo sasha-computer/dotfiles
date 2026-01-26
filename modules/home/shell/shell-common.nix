@@ -1,12 +1,14 @@
+# Common shell configuration shared between Linux and macOS
 {
   pkgs,
   lib,
+  config,
   ...
 }:
 
 {
   # ==========================================================================
-  # Git (using new settings syntax)
+  # Git (shared across platforms)
   # ==========================================================================
 
   programs.git = {
@@ -19,37 +21,26 @@
       user.name = "nmod";
       user.email = "33594434+neutronmoderator@users.noreply.github.com";
       gpg.format = "ssh";
-      "gpg \"ssh\"".program = "${lib.getExe' pkgs._1password-gui "op-ssh-sign"}";
       push.autoSetupRemote = true;
     };
   };
 
   # ==========================================================================
-  # SSH
+  # SSH (base config, socket path set by platform-specific module)
   # ==========================================================================
 
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks = {
-      "*" = {
-        extraOptions = {
-          IdentityAgent = "~/.1password/agent.sock";
-        };
-      };
-    };
   };
 
   # ==========================================================================
-  # Fish
+  # Fish (shared aliases and plugins)
   # ==========================================================================
 
   programs.fish = {
     enable = true;
     shellAliases = {
-      # NixOS
-      nrs = "sudo nixos-rebuild switch --flake ~/Dotfiles#fw13";
-
       # Git
       gl = "git log --oneline";
       gcm = "git commit -m";
@@ -68,7 +59,6 @@
       cdd = "cd ~/Developer/";
       cc = "claude --allow-dangerously-skip-permissions";
       "z." = "zeditor .";
-      cfg = "cd ~/Dotfiles/ && cc";
     };
     plugins = [
       {
@@ -76,6 +66,5 @@
         src = pkgs.fishPlugins.z.src;
       }
     ];
-    interactiveShellInit = builtins.readFile ../../sources/config.fish;
   };
 }

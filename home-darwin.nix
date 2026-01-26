@@ -1,24 +1,19 @@
-{ desktopEnvironment, ... }:
+# Home Manager configuration for macOS
+{ pkgs, ... }:
 
 {
   home-manager.backupFileExtension = "bak";
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
 
-  home-manager.users.sasha = {
+  home-manager.users.nmod = {
     imports = [
       ./modules/home/shell/shell-common.nix
-      ./modules/home/shell/shell-linux.nix
-      ./modules/home/desktop-common.nix
+      ./modules/home/shell/shell-darwin.nix
       ./modules/home/editors.nix
-      ./modules/home/browsers.nix
       ./modules/home/tools-common.nix
-      ./modules/home/tools-linux.nix
-    ]
-    # Conditional desktop imports
-    ++ (if desktopEnvironment == "plasma"
-        then [ ./modules/home/desktop-plasma.nix ]
-        else [ ./modules/home/desktop-niri.nix ]);
+      ./modules/home/tools-darwin.nix
+    ];
 
     # ==========================================================================
     # Environment Variables
@@ -27,6 +22,26 @@
     home.sessionVariables = {
       EDITOR = "nvim";
     };
+
+    # ==========================================================================
+    # User Packages (via home-manager)
+    # ==========================================================================
+
+    home.packages = with pkgs; [
+      # Development tools available via nix
+      bun
+      uv
+      nixd
+      nil
+      claude-code
+      gh
+
+      # Tools
+      jq
+      fzf
+      ripgrep
+      dust
+    ];
 
     # ==========================================================================
     # Version
