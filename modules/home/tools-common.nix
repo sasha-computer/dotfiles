@@ -1,14 +1,12 @@
-{ pkgs, ... }:
+# Common dotfile deployment (cross-platform)
+{ ... }:
 
 {
   # ==========================================================================
-  # Dotfiles
+  # Dotfiles (shared across platforms)
   # ==========================================================================
 
   home.file = {
-    # 1Password SSH agent
-    ".config/1Password/ssh/agent.toml".source = ../../sources/1password-ssh-agent.toml;
-
     # Ghostty terminal
     ".config/ghostty/config".source = ../../sources/ghostty.conf;
 
