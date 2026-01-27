@@ -22,7 +22,10 @@ in {
         mod-key = "Alt";
         mod-key-nested = "Super";
         keyboard = {
-          xkb.layout = "us";
+          xkb = {
+            layout = "us";
+            options = "caps:escape";
+          };
           repeat-delay = 300;
           repeat-rate = 50;
         };
@@ -72,12 +75,11 @@ in {
 
       spawn-at-startup = [
         { command = [ "xwayland-satellite" ]; }
-        { command = [ "1password" "--silent" ]; }
       ];
 
       binds = with config.lib.niri.actions; {
         "Mod+Return".action = spawn "ghostty";
-        "Mod+D".action = spawn "fuzzel";
+        "Mod+Space".action = spawn "fuzzel";
         "Mod+W".action = spawn "${focus-or-spawn}/bin/focus-or-spawn" "firefox" "firefox";
         "Mod+S".action = spawn "${focus-or-spawn}/bin/focus-or-spawn" "Slack" "slack";
         "Mod+E".action = spawn "${focus-or-spawn}/bin/focus-or-spawn" "com.mitchellh.ghostty" "ghostty";
@@ -214,7 +216,6 @@ in {
   };
 
   home.packages = with pkgs; [
-    fuzzel
     wl-clipboard
     cliphist
     grim
@@ -225,11 +226,35 @@ in {
     playerctl
   ];
 
+  programs.fuzzel = {
+    enable = true;
+    settings = {
+      main = {
+        font = "monospace:size=16";
+        width = 50;
+        lines = 15;
+        horizontal-pad = 20;
+        vertical-pad = 15;
+        inner-pad = 10;
+      };
+    };
+  };
+
   # USB auto-mount daemon
   services.udiskie = {
     enable = true;
     tray = "auto";  # Show tray icon when devices present
     notify = true;  # Desktop notifications on mount/unmount
+    settings.program_options.file_manager = "dolphin";
+  };
+
+  # GTK/icon theme (needed for tray icons like udiskie)
+  gtk = {
+    enable = true;
+    iconTheme = {
+      name = "Adwaita";
+      package = pkgs.adwaita-icon-theme;
+    };
   };
 
   # Gnome keyring for secret storage (replaces kwallet for Signal, etc.)
@@ -244,13 +269,22 @@ in {
     settings.default-timeout = 5000;
   };
 
-  # Signal: use gnome-keyring instead of kwallet
+  # Signal: use gnome-keyring instead of kwallet (overrides system .desktop file)
   xdg.desktopEntries.signal-desktop = {
     name = "Signal";
     exec = "signal-desktop --password-store=\"gnome-libsecret\" %U";
     icon = "signal-desktop";
     type = "Application";
     categories = [ "Network" "InstantMessaging" ];
+    startupNotify = true;
+    settings.StartupWMClass = "Signal";
+  };
+
+  # Hide the original Signal desktop entry from the package
+  xdg.desktopEntries.Signal = {
+    name = "Signal (unused)";
+    exec = "signal-desktop";
+    noDisplay = true;
   };
 
   # Auto dark mode: switch to dark at 5pm, light at 7am

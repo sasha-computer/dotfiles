@@ -21,8 +21,11 @@
   # XDG portals
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
-    config.common.default = "*";  # Use first available portal implementation
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gnome  # File picker, etc.
+      pkgs.xdg-desktop-portal-wlr    # Screen capture for wlroots
+    ];
+    config.common.default = "*";
   };
 
   # DMS dependencies

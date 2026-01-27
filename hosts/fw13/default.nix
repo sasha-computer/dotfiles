@@ -94,6 +94,7 @@
       fzf
       ripgrep
       gum
+      imagemagick
 
       # Fonts
       powerline-fonts

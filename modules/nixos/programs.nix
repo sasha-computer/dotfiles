@@ -18,4 +18,13 @@
     glib
     openssl
   ];
+
+  # OBS Studio with Wayland/Pipewire support
+  programs.obs-studio = {
+    enable = true;
+    plugins = with pkgs.obs-studio-plugins; [
+      wlrobs                     # Screen capture for wlroots (Niri)
+      obs-pipewire-audio-capture # Audio capture via Pipewire
+    ];
+  };
 }
