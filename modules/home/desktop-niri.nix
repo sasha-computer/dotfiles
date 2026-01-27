@@ -337,9 +337,4 @@ in {
     };
   };
 
-  # DMS plugins
-  home.file.".config/DankMaterialShell/plugins/AudioSwitcher" = {
-    source = ../../sources/dms-plugins/AudioSwitcher;
-    recursive = true;
-  };
 }
