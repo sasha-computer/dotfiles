@@ -1,0 +1,11 @@
+{
+    "id": "audioSwitcher",
+    "name": "Audio Switcher",
+    "description": "Quick audio output switcher for DankBar",
+    "version": "1.0.0",
+    "author": "sasha",
+    "icon": "speaker",
+    "type": "widget",
+    "component": "./AudioSwitcherWidget.qml",
+    "permissions": []
+}
