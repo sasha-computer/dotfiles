@@ -1,7 +1,18 @@
 # Framework 13 (fw13) host configuration
 { pkgs, lib, desktopEnvironment, ... }:
 
-{
+let
+  # Wrap RuneLite with Java AWT fix for Wayland/XWayland
+  runelite-wrapped = pkgs.symlinkJoin {
+    name = "runelite-wrapped";
+    paths = [ pkgs.runelite ];
+    buildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      wrapProgram $out/bin/runelite \
+        --set _JAVA_AWT_WM_NONREPARENTING 1
+    '';
+  };
+in {
   imports = [
     ./hardware-configuration.nix
 
@@ -52,6 +63,7 @@
       tmux
 
       # Development
+      nodejs
       bun
       uv
       cargo
@@ -61,14 +73,18 @@
       nixd
       nil
       claude-code
+      opencode
       gh
       code-cursor
+      cursor-cli
+      awscli2
+      flyctl
 
       # Communication
       slack
       signal-desktop-bin
       telegram-desktop
-      discord
+      vesktop
 
       # Applications
       kdePackages.dolphin
@@ -82,7 +98,7 @@
 
       # Games
       bolt-launcher
-      runelite
+      runelite-wrapped
 
       # XWayland for Electron apps (Cursor, etc.)
       xwayland-satellite
@@ -95,6 +111,11 @@
       ripgrep
       gum
       imagemagick
+
+      # Whisper push-to-talk
+      whisper-cpp
+      wtype
+      ffmpeg
 
       # Fonts
       powerline-fonts

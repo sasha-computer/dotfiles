@@ -12,10 +12,63 @@ let
       "''${COMMAND[@]}" &
     fi
   '';
+
+  whisper-ptt = pkgs.writeShellScriptBin "whisper-ptt" ''
+    # Toggle-mode whisper push-to-talk for Wayland
+    set -euo pipefail
+
+    AUDIO_FILE="/tmp/whisper-recording.wav"
+    MODEL="$HOME/.local/share/whisper/ggml-base.en.bin"
+    PID_FILE="/tmp/whisper-ptt.pid"
+    export YDOTOOL_SOCKET=/run/ydotoold/socket
+
+    start_recording() {
+        ${pkgs.libnotify}/bin/notify-send -t 1500 "🎤 Recording..." "Press Alt+. again to stop"
+        # Record from default PipeWire source (16kHz mono for whisper)
+        ${pkgs.ffmpeg}/bin/ffmpeg -f pulse -i default -ac 1 -ar 16000 -y "$AUDIO_FILE" 2>/dev/null &
+        echo $! > "$PID_FILE"
+    }
+
+    stop_and_transcribe() {
+        if [ -f "$PID_FILE" ]; then
+            kill "$(cat "$PID_FILE")" 2>/dev/null || true
+            rm "$PID_FILE"
+
+            ${pkgs.libnotify}/bin/notify-send -t 1500 "⏳ Transcribing..."
+
+            # Transcribe (skip timestamps, just get text)
+            TEXT=$(${pkgs.whisper-cpp}/bin/whisper-cli -m "$MODEL" -nt -np "$AUDIO_FILE" 2>/dev/null | \
+                   grep -v '^\[' | sed 's/^ *//' | tr '\n' ' ' | sed 's/  */ /g; s/^ *//; s/ *$//')
+
+            rm -f "$AUDIO_FILE"
+
+            if [ -n "$TEXT" ]; then
+                # Copy to clipboard and type (ydotool needs ydotool group membership)
+                echo -n "$TEXT" | ${pkgs.wl-clipboard}/bin/wl-copy
+                # Try ydotool first, fall back to notification if it fails
+                if ${pkgs.ydotool}/bin/ydotool type "$TEXT" 2>/dev/null; then
+                    ${pkgs.libnotify}/bin/notify-send -t 1500 "✓ Transcribed" "$TEXT"
+                else
+                    ${pkgs.libnotify}/bin/notify-send -t 3000 "✓ Copied to clipboard" "$TEXT (Ctrl+V to paste)"
+                fi
+            else
+                ${pkgs.libnotify}/bin/notify-send -t 2000 "⚠ No speech detected"
+            fi
+        fi
+    }
+
+    # Toggle logic
+    if [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
+        stop_and_transcribe
+    else
+        rm -f "$PID_FILE"  # Clean up stale PID file
+        start_recording
+    fi
+  '';
 in {
   programs.niri = {
     enable = true;
-    package = pkgs.niri-stable;
+    package = pkgs.niri-unstable;
 
     settings = {
       input = {
@@ -83,12 +136,14 @@ in {
         "Mod+W".action = spawn "${focus-or-spawn}/bin/focus-or-spawn" "firefox" "firefox";
         "Mod+S".action = spawn "${focus-or-spawn}/bin/focus-or-spawn" "Slack" "slack";
         "Mod+E".action = spawn "${focus-or-spawn}/bin/focus-or-spawn" "com.mitchellh.ghostty" "ghostty";
+        "Mod+O".action = spawn "${focus-or-spawn}/bin/focus-or-spawn" "obsidian" "obsidian";
+        "Mod+T".action = spawn "${focus-or-spawn}/bin/focus-or-spawn" "Todoist" "todoist-electron";
 
         "Mod+Q".action = close-window;
-        "Mod+Grave".action = focus-window-previous;
+        # Alt+Tab and Alt+Grave now handled by built-in MRU window switcher
         "Mod+F".action = maximize-column;
         "Mod+Shift+F".action = fullscreen-window;
-        "Mod+Tab".action = toggle-overview;
+        "Super+Tab".action = toggle-overview;  # Moved to Super since Alt+Tab is MRU
 
         "Mod+H".action = focus-column-left;
         "Mod+J".action = focus-window-down;
@@ -129,6 +184,9 @@ in {
         # Screenshot selection to clipboard (macOS-style)
         "Alt+Shift+4".action = spawn "sh" "-c" "grim -g \"$(slurp)\" - | wl-copy";
 
+        # Whisper push-to-talk (toggle: press to start, press again to stop & transcribe)
+        "Mod+Period".action = spawn "${whisper-ptt}/bin/whisper-ptt";
+
         # Disable laptop display (when TV is connected)
         "Mod+Shift+M".action = spawn "niri" "msg" "output" "eDP-1" "off";
         # Re-enable laptop display
@@ -163,8 +221,7 @@ in {
 
       window-rules = [
         {
-          # All windows open maximized by default
-          open-maximized = true;
+          # All windows use default-column-width (50%)
         }
         {
           matches = [{ app-id = "^firefox$"; }];
@@ -185,10 +242,10 @@ in {
       ];
 
       animations = {
-        slowdown = 1.0;
+        slowdown = 0.8;
         window-open.kind.spring = {
-          damping-ratio = 0.8;
-          stiffness = 500;
+          damping-ratio = 0.9;
+          stiffness = 800;
           epsilon = 0.0001;
         };
       };
@@ -202,7 +259,7 @@ in {
       restartIfChanged = true;
     };
     enableSystemMonitoring = true;
-    enableVPN = false;
+    enableVPN = true;
     enableDynamicTheming = true;
     enableAudioWavelength = true;
     enableCalendarEvents = false;
@@ -211,7 +268,7 @@ in {
     niri = {
       enableKeybinds = false;  # We define our own keybinds above
       enableSpawn = true;
-      includes.enable = false;
+      includes.enable = true;
     };
   };
 
@@ -272,7 +329,7 @@ in {
   # Signal: use gnome-keyring instead of kwallet (overrides system .desktop file)
   xdg.desktopEntries.signal-desktop = {
     name = "Signal";
-    exec = "signal-desktop --password-store=\"gnome-libsecret\" %U";
+    exec = "signal-desktop --use-tray-icon --password-store=\"gnome-libsecret\" %U";
     icon = "signal-desktop";
     type = "Application";
     categories = [ "Network" "InstantMessaging" ];
@@ -335,6 +392,47 @@ in {
     Install = {
       WantedBy = [ "sleep.target" ];
     };
+  };
+
+  # Check for flake updates and notify
+  systemd.user.services.flake-update-check = {
+    Unit.Description = "Check for NixOS flake updates";
+    Service = {
+      Type = "oneshot";
+      ExecStart = let
+        script = pkgs.writeShellScript "check-flake-updates" ''
+          set -euo pipefail
+          FLAKE_DIR="$HOME/Dotfiles"
+          TEMP_DIR=$(mktemp -d)
+          trap "rm -rf $TEMP_DIR" EXIT
+
+          # Copy flake to temp dir
+          cp "$FLAKE_DIR/flake.nix" "$FLAKE_DIR/flake.lock" "$TEMP_DIR/"
+
+          # Update in temp dir
+          cd "$TEMP_DIR"
+          ${pkgs.nix}/bin/nix flake update --flake . 2>/dev/null
+
+          # Compare lockfiles
+          if ! diff -q "$FLAKE_DIR/flake.lock" "$TEMP_DIR/flake.lock" >/dev/null 2>&1; then
+            ${pkgs.libnotify}/bin/notify-send \
+              -u normal \
+              -i software-update-available \
+              "NixOS Updates Available" \
+              "Run 'nix flake update && nrs' to update"
+          fi
+        '';
+      in "${script}";
+    };
+  };
+
+  systemd.user.timers.flake-update-check = {
+    Unit.Description = "Check for flake updates daily";
+    Timer = {
+      OnCalendar = "*-*-* 12:00:00";
+      Persistent = true;
+    };
+    Install.WantedBy = [ "timers.target" ];
   };
 
 }

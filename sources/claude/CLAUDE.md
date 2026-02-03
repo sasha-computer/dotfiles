@@ -1,20 +1,8 @@
-# Global Claude Context
+# Global Context
 
-## Environment
+Shell: fish | OS: NixOS | Shebangs: `#!/usr/bin/env bash`
 
-- **Shell:** fish
-- **OS:** NixOS (Framework 13 laptop)
-- **Script shebangs:** Always use `#!/usr/bin/env bash` for portability
+Prefer `gh` CLI for GitHub. Use Context7 MCP for library docs.
 
-## Key Paths
-
-- **Dotfiles:** `~/Dotfiles` (NixOS flake config)
-- **Obsidian vault:** `~/Documents/2026/`
-- **Ideas:** `~/Ideas/`
-- **Projects:** `~/Developer/`
-
-## Commands
-
-- `/nix` - Package management and config changes
-- `/study-session` - Study from Obsidian vault
-- `/drill` - Drill flashcards
+## CLAUDE.md Style
+Keep CLAUDE.md files minimal. Include only: commands, essential constraints, non-discoverable info. Omit directory structures, file lists, and patterns the agent can explore.

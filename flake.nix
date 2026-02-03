@@ -62,6 +62,7 @@
             nixpkgs.overlays = [
               (final: prev: {
                 helium = helium.packages.${prev.stdenv.hostPlatform.system}.default;
+                cursor-cli = prev.callPackage ./packages/cursor-cli.nix { };
               })
               niri-flake.overlays.niri
             ];

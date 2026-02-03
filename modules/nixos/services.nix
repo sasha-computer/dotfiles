@@ -1,6 +1,8 @@
 { pkgs, ... }:
 
 {
+  # Electron apps on Wayland (Discord, VSCode, etc.)
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
   # ==========================================================================
   # Suspend/Resume fixes for Framework 13
   # ==========================================================================
@@ -16,10 +18,11 @@
     };
   };
 
-  # Ensure lid close triggers suspend
+  # Ignore lid close (laptop used docked with external monitor)
   services.logind.settings.Login = {
-    HandleLidSwitch = "suspend";
-    HandleLidSwitchExternalPower = "suspend";
+    HandleLidSwitch = "ignore";
+    HandleLidSwitchExternalPower = "ignore";
+    HandleLidSwitchDocked = "ignore";
   };
 
   # ==========================================================================
@@ -51,4 +54,11 @@
 
   # udisks2 backend for USB mounting (udiskie uses this)
   services.udisks2.enable = true;
+
+  # ==========================================================================
+  # Input Simulation (for whisper-ptt, etc.)
+  # ==========================================================================
+
+  # ydotool daemon for typing from scripts (works on Wayland)
+  programs.ydotool.enable = true;
 }

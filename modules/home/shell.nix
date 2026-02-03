@@ -77,9 +77,9 @@
       # Navigation & Tools
       ll = "ls -l";
       cdd = "cd ~/Developer/";
-      cc = "claude --allow-dangerously-skip-permissions";
+      cc = "${lib.getExe pkgs.claude-code} --allow-dangerously-skip-permissions";
       "z." = "zeditor .";
-      cfg = "cd ~/Dotfiles/ && cc";
+      cfg = "cd ~/Dotfiles/ && ${lib.getExe pkgs.claude-code} --dangerously-skip-permissions";
     };
     plugins = [
       {
@@ -89,4 +89,17 @@
     ];
     interactiveShellInit = builtins.readFile ../../sources/config.fish;
   };
+
+  # ==========================================================================
+  # Session Environment Variables
+  # ==========================================================================
+
+  # Java AWT fix for non-reparenting window managers (Niri)
+  # Fixes tiling/rendering issues with Java Swing apps like RuneLite
+  home.sessionVariables = {
+    _JAVA_AWT_WM_NONREPARENTING = "1";
+  };
+
+  # Add custom scripts to PATH
+  home.sessionPath = [ "$HOME/Dotfiles/scripts" ];
 }
