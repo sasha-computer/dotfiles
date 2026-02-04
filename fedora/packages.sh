@@ -42,6 +42,12 @@ DNF_PACKAGES=(
 EXTERNAL_BINARIES=(
     "rustc:Rust (install via rustup.rs)"
     "cargo:Cargo (install via rustup.rs)"
+    "agent:Cursor CLI (curl https://cursor.com/install -fsS | bash)"
+)
+
+# Nerd Fonts to install (from GitHub releases)
+NERD_FONTS=(
+    "JetBrainsMono"
 )
 
 # Flatpak apps (app-id)
@@ -127,6 +133,26 @@ install_flatpak_apps() {
     echo ""
 }
 
+install_nerd_fonts() {
+    echo "=== Nerd Fonts ==="
+    local font_dir="$HOME/.local/share/fonts"
+    mkdir -p "$font_dir"
+
+    for font in "${NERD_FONTS[@]}"; do
+        if fc-list | grep -qi "${font}.*Nerd Font"; then
+            log_skip "Already installed: $font Nerd Font"
+        else
+            log_info "Installing: $font Nerd Font"
+            local url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${font}.tar.xz"
+            curl -fsSL "$url" | tar -xJ -C "$font_dir"
+            log_success "Installed: $font Nerd Font"
+        fi
+    done
+
+    fc-cache -f "$font_dir"
+    echo ""
+}
+
 set_default_shell() {
     echo "=== Default Shell ==="
     local fish_path
@@ -156,6 +182,7 @@ echo ""
 check_external_binaries
 install_dnf_packages
 install_flatpak_apps
+install_nerd_fonts
 set_default_shell
 
 echo "=== Installation Complete ==="
