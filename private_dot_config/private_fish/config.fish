@@ -25,6 +25,6 @@ if status is-interactive
     alias grv 'git remote -v'
 
     alias v nvim
-    alias vf 'chezmoi edit ~/.config/fish/config.fish'
-    alias vg 'chezmoi edit ~/.config/ghostty/config.ghostty'
+    alias vf 'nvim ~/.config/fish/config.fish'
+    alias vg 'nvim ~/.config/ghostty/config.ghostty'
 end
