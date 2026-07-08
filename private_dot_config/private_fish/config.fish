@@ -4,6 +4,8 @@ set -gx HOMEBREW_NO_AUTO_UPDATE 1
 set -gx HOMEBREW_NO_INSTALL_CLEANUP 1
 set -gx HOMEBREW_NO_ENV_HINTS 1
 
+set -gx EDITOR nvim
+
 if status is-interactive
     alias cdd 'cd ~/Developer/'
     alias docs 'cd ~/Documents/'
@@ -21,4 +23,6 @@ if status is-interactive
     alias gcb 'git checkout -b'
     alias gcl 'git clone'
     alias grv 'git remote -v'
+
+    alias vf 'chezmoi edit ~/.config/fish/config.fish'
 end
