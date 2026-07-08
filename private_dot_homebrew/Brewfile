@@ -1,0 +1,97 @@
+# All-in-one AI-Powered CLI Chat & Copilot
+brew "aichat"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Resource monitor. C++ version and continuation of bashtop and bpytop
+brew "btop"
+# Incredibly fast JavaScript runtime, bundler, test runner, and package manager
+brew "bun"
+# Manage your dotfiles across multiple diverse machines, securely
+brew "chezmoi"
+# More intuitive version of du in rust
+brew "dust"
+# GNU Emacs text editor
+brew "emacs"
+# Modern, maintained replacement for ls
+brew "eza"
+# Like neofetch, but much faster because written mostly in C
+brew "fastfetch"
+# Play, record, convert, and stream select audio and video codecs
+brew "ffmpeg"
+# User-friendly command-line shell for UNIX-like operating systems
+brew "fish"
+# GitHub command-line tool
+brew "gh"
+# Scheme framework for extension and scripting languages on macOS and iOS
+brew "lispkit"
+# Polyglot runtime manager (asdf rust clone)
+brew "mise"
+# MIT/GNU Scheme development tools and runtime library
+brew "mit-scheme"
+# Deep clean and optimize your Mac
+brew "mole"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
+# AI coding agent, built for the terminal
+brew "opencode"
+# Organize software neatly under a single directory tree (e.g. /usr/local)
+brew "stow"
+# Terminal multiplexer
+brew "tmux"
+# Feature-rich command-line audio/video downloader
+brew "yt-dlp"
+# Pluggable terminal workspace, with terminal multiplexer as the base feature
+brew "zellij"
+# Password manager that keeps all passwords secure behind one password
+cask "1password"
+# Command-line interface for 1Password
+cask "1password-cli"
+# Memory training application
+cask "anki"
+# 3D model slicing software for 3D printers, maintained by Bambu Lab
+cask "bambu-studio"
+# Block websites, games and applications
+cask "cold-turkey-blocker"
+# Voice and text chat software
+cask "discord"
+cask "font-jetbrains-mono-nerd-font"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# Client for the Google Drive storage service
+cask "google-drive"
+# Chromium-based web browser
+cask "helium-browser"
+# App providing offline access to Wikipedia and many other web sites
+cask "kiwix"
+# Open-source cross-platform alternative to AirDrop
+cask "localsend"
+# VPN client
+cask "mullvad-vpn"
+# Free and open-source RSS reader
+cask "netnewswire"
+# Knowledge base that works on top of a local folder of plain text Markdown files
+cask "obsidian"
+# Programmable solid 3D CAD modeller
+cask "openscad"
+# WebKit based web browser
+cask "orion"
+# Peer to peer Bitorrent client
+cask "qbittorrent"
+# Control your tools with a few keystrokes
+cask "raycast"
+# Instant messaging application focusing on security
+cask "signal"
+# Team communication and collaboration software
+cask "slack"
+# Music streaming service
+cask "spotify"
+# Desktop client for Telegram messenger
+cask "telegram-desktop"
+# Menu bar manager
+cask "thaw"
+# To-do list
+cask "todoist-app"
+# Multimedia player
+cask "vlc"
+# Multiplayer code editor
+cask "zed"

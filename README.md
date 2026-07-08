@@ -10,7 +10,8 @@ Managed with [chezmoi](https://chezmoi.io).
 - `~/.config/ghostty/config.ghostty`
 - `~/.config/opencode/opencode.jsonc`
 - `~/.config/opencode/tui.json`
-- Bootstrap script (LazyVim, Fisher + plugins on first apply)
+- `~/.homebrew/Brewfile`
+- Bootstrap script (Homebrew bundles, LazyVim, Fisher + plugins on first apply)
 
 ## Commands
 
