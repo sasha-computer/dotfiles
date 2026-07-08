@@ -8,6 +8,8 @@ Managed with [chezmoi](https://chezmoi.io).
 - `~/.config/fish/config.fish`
 - `~/.config/fish/functions/dp.fish`
 - `~/.config/ghostty/config.ghostty`
+- `~/.config/opencode/opencode.jsonc`
+- `~/.config/opencode/tui.json`
 - Bootstrap script (LazyVim, Fisher + plugins on first apply)
 
 ## Commands
