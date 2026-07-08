@@ -1,0 +1,8 @@
+font-family = "Berkeley Mono"
+font-size = 19
+window-padding-x = 48
+window-padding-y = 48
+focus-follows-mouse = true
+copy-on-select = clipboard
+theme = light:GitHub Light High Contrast,dark: GitHub Dark High Contrast
+working-directory = /Users/sasha/Developer

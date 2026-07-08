@@ -24,5 +24,7 @@ if status is-interactive
     alias gcl 'git clone'
     alias grv 'git remote -v'
 
+    alias v nvim
     alias vf 'chezmoi edit ~/.config/fish/config.fish'
+    alias vg 'chezmoi edit ~/.config/ghostty/'
 end
