@@ -26,5 +26,5 @@ if status is-interactive
 
     alias v nvim
     alias vf 'chezmoi edit ~/.config/fish/config.fish'
-    alias vg 'chezmoi edit ~/.config/ghostty/'
+    alias vg 'chezmoi edit ~/.config/ghostty/config.ghostty'
 end
