@@ -1,5 +1,6 @@
-function dp --description 'chezmoi: add, commit progress, push'
+function dp --description 'chezmoi: re-add, commit progress, push'
     echo (set_color blue)"Finding dotfile changes..."(set_color normal)
+    chezmoi re-add --quiet
     chezmoi git -- add -A
     set changed (chezmoi git -- diff --cached --name-only)
     if test (count $changed) -eq 0
