@@ -1,4 +1,6 @@
 function dp --description 'chezmoi: re-add, commit progress, push'
+    echo (set_color blue)"Refreshing Brewfile..."(set_color normal)
+    brew bundle dump --global --force --quiet
     echo (set_color blue)"Finding dotfile changes..."(set_color normal)
     chezmoi re-add --quiet
     chezmoi git -- add -A
