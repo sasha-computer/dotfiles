@@ -11,6 +11,7 @@ if status is-interactive
     alias docs 'cd ~/Documents/'
     alias oc opencode
 
+    alias gb 'git branch -a'
     alias gl 'git log --oneline'
     alias gcm 'git commit -m'
     alias gaa 'git add .'
