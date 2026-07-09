@@ -22,6 +22,8 @@ brew "ffmpeg"
 brew "fish"
 # GitHub command-line tool
 brew "gh"
+# Quickly rewrite git repository history
+brew "git-filter-repo"
 # Scheme framework for extension and scripting languages on macOS and iOS
 brew "lispkit"
 # Polyglot runtime manager (asdf rust clone)
