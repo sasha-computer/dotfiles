@@ -95,6 +95,8 @@ cask "thaw"
 cask "todoist-app"
 # Multimedia player
 cask "vlc"
+# Native desktop client for WhatsApp
+cask "whatsapp"
 # Multiplayer code editor
 cask "zed"
 uv "-"
