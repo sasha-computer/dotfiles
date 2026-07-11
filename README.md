@@ -10,7 +10,7 @@ Heavily inspired by [jclem's dotfiles](https://github.com/jclem/dotfiles).
 curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/bootstrap.sh | sh
 ```
 
-This installs Homebrew, mise, clones the repo, and runs `mise bootstrap` which handles packages, dotfiles, macOS defaults, shell, Fisher plugins, and LazyVim.
+This installs Homebrew, runs `brew bundle install` to install all formulae and casks from the Brewfile, then runs `mise bootstrap` which handles dotfiles, macOS defaults, shell, Fisher plugins, and LazyVim.
 
 ## Post-bootstrap (manual)
 
@@ -29,7 +29,7 @@ This installs Homebrew, mise, clones the repo, and runs `mise bootstrap` which h
 
 ## Commands
 
-- `mise bootstrap --yes` — converge machine to declared state
+- `mise bootstrap --yes` — converge machine to declared state (runs `brew bundle install`, Fisher plugins, vastai)
 - `mise dotfiles status` — check which dotfiles are missing/differ
-- `mise bootstrap status --missing` — check everything that's out of sync
+- `brew bundle cleanup --file ~/src/github.com/sasha-computer/dotfiles/Brewfile` — remove brew packages not in Brewfile
 - `dp` — stage, commit ("progress"), and push dotfile changes

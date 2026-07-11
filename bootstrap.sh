@@ -17,9 +17,9 @@ if ! command -v brew >/dev/null 2>&1; then
 fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# mise
-brew install mise
+# Install all packages (formulae + casks) including mise
+brew bundle install --file "$REPO_DIR/Brewfile"
 
-# Trust and bootstrap
+# Trust and bootstrap (dotfiles, defaults, hooks, tasks)
 mise trust
 mise bootstrap --yes --force-dotfiles
