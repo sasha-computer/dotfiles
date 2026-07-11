@@ -14,7 +14,7 @@ function brew --description "Wrap brew install to use mise bootstrap packages"
                 set is_cask true
             case --formula
                 set is_cask false
-            case --*
+            case '--*'
                 continue
             case '*'
                 set --append packages $arg

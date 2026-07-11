@@ -57,6 +57,7 @@ experimental = true
 "brew-cask:vlc" = "latest"
 "brew-cask:whatsapp" = "latest"
 "brew-cask:zed" = "latest"
+"brew-cask:cleanshot" = "latest"
 
 # Hooks run at named points in the bootstrap sequence
 # https://mise.jdx.dev/bootstrap.html#hooks
