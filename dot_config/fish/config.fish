@@ -29,6 +29,8 @@ if status is-interactive
     alias gcl 'git clone'
     alias grv 'git remote -v'
 
+    alias apply 'mise bootstrap macos defaults apply --yes'
+
     alias v nvim
     alias vf 'nvim ~/.config/fish/config.fish'
     alias vg 'nvim ~/.config/ghostty/config.ghostty'
