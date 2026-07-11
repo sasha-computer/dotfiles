@@ -103,6 +103,7 @@ tap_to_click = true
 [bootstrap.macos.defaults]
 "NSGlobalDomain" = { NSAutomaticCapitalizationEnabled = false, NSAutomaticDashSubstitutionEnabled = false, NSAutomaticPeriodSubstitutionEnabled = false, NSAutomaticQuoteSubstitutionEnabled = false, NSAutomaticSpellingCorrectionEnabled = false }
 "com.apple.finder" = { FXDefaultSearchScope = "SCcf", WarnOnEmptyTrash = false, FXRemoveOldTrashItems = true }
+"com.apple.menuextra.battery" = { ShowPercent = true }
 
 # User login shell
 # https://mise.jdx.dev/bootstrap/user.html
