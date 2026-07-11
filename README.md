@@ -2,6 +2,8 @@
 
 Managed with [mise](https://mise.jdx.dev).
 
+Heavily inspired by [jclem's dotfiles](https://github.com/jclem/dotfiles).
+
 ## Bootstrap a new Mac
 
 ```sh
