@@ -6,6 +6,10 @@ set -gx HOMEBREW_NO_ENV_HINTS 1
 
 set -gx EDITOR nvim
 
+if command -q mise
+    mise activate fish | source
+end
+
 if status is-interactive
     alias cdd 'cd ~/Developer/'
     alias docs 'cd ~/Documents/'

@@ -1,26 +1,33 @@
 # dotfiles
 
-Managed with [chezmoi](https://chezmoi.io).
+Managed with [mise](https://mise.jdx.dev).
+
+## Bootstrap a new Mac
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/bootstrap.sh | sh
+```
+
+This installs Homebrew, mise, clones the repo, and runs `mise bootstrap` which handles packages, dotfiles, macOS defaults, shell, Fisher plugins, and LazyVim.
+
+## Post-bootstrap (manual)
+
+1. Open 1Password → Settings → Developer → enable SSH agent
+2. Authorize your SSH signing key in 1Password
 
 ## Managed files
 
 - `~/.gitconfig`
-- `~/.config/fish/config.fish`
-- `~/.config/fish/functions/dp.fish`
-- `~/.config/fish/functions/dp-auto.fish`
+- `~/.ssh/config`
+- `~/.config/fish/` (config.fish, fish_plugins, functions/dp.fish)
 - `~/.config/ghostty/config.ghostty`
 - `~/.config/zed/settings.json`
-- `~/.config/opencode/opencode.jsonc`
-- `~/.config/opencode/tui.json`
-- `~/.homebrew/Brewfile`
-- `~/Library/LaunchAgents/com.neo.dotfiles.plist`
-- Bootstrap script (Homebrew bundles, LazyVim, Fisher + plugins on first apply)
-- Daily auto-backup via launchd (runs dp-auto at 12:00)
+- `~/.config/opencode/` (opencode.jsonc, tui.json, anti-llmisms-short.md, pr-conventions.md)
+- `~/.config/nvim/` (LazyVim, cloned by bootstrap hook)
 
 ## Commands
 
-- `chezmoi apply` — apply changes to home directory
-- `chezmoi update` — pull latest from this repo and apply
-- `chezmoi edit <file>` — edit a managed file in place
-- `dp` — stage, commit ("progress"), and push all dotfile changes
-- `dp-auto` — silent version for launchd (no colors)
+- `mise bootstrap --yes` — converge machine to declared state
+- `mise dotfiles status` — check which dotfiles are missing/differ
+- `mise bootstrap status --missing` — check everything that's out of sync
+- `dp` — stage, commit ("progress"), and push dotfile changes

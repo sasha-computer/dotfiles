@@ -1,0 +1,108 @@
+[settings]
+dotfiles.root = "~/.dotfiles"
+experimental = true
+
+# ── Packages ──────────────────────────────────────────────
+[bootstrap.packages]
+"brew:aichat" = "latest"
+"brew:bat" = "latest"
+"brew:btop" = "latest"
+"brew:bun" = "latest"
+"brew:dust" = "latest"
+"brew:emacs" = "latest"
+"brew:eza" = "latest"
+"brew:fastfetch" = "latest"
+"brew:ffmpeg" = "latest"
+"brew:fish" = "latest"
+"brew:gh" = "latest"
+"brew:git-filter-repo" = "latest"
+"brew:lispkit" = "latest"
+"brew:mise" = "latest"
+"brew:mit-scheme" = "latest"
+"brew:mole" = "latest"
+"brew:neovim" = "latest"
+"brew:opencode" = "latest"
+"brew:stow" = "latest"
+"brew:tmux" = "latest"
+"brew:uv" = "latest"
+"brew:yt-dlp" = "latest"
+"brew:zellij" = "latest"
+"brew-cask:1password" = "latest"
+"brew-cask:1password-cli" = "latest"
+"brew-cask:anki" = "latest"
+"brew-cask:bambu-studio" = "latest"
+"brew-cask:cold-turkey-blocker" = "latest"
+"brew-cask:discord" = "latest"
+"brew-cask:font-jetbrains-mono-nerd-font" = "latest"
+"brew-cask:ghostty" = "latest"
+"brew-cask:google-drive" = "latest"
+"brew-cask:helium-browser" = "latest"
+"brew-cask:kiwix" = "latest"
+"brew-cask:localsend" = "latest"
+"brew-cask:mullvad-vpn" = "latest"
+"brew-cask:netnewswire" = "latest"
+"brew-cask:obsidian" = "latest"
+"brew-cask:openscad" = "latest"
+"brew-cask:orion" = "latest"
+"brew-cask:qbittorrent" = "latest"
+"brew-cask:raycast" = "latest"
+"brew-cask:signal" = "latest"
+"brew-cask:slack" = "latest"
+"brew-cask:spotify" = "latest"
+"brew-cask:telegram-desktop" = "latest"
+"brew-cask:thaw" = "latest"
+"brew-cask:todoist-app" = "latest"
+"brew-cask:vlc" = "latest"
+"brew-cask:whatsapp" = "latest"
+"brew-cask:zed" = "latest"
+
+# ── Hooks ─────────────────────────────────────────────────
+# Clone LazyVim before dotfiles are applied (idempotent)
+[bootstrap.hooks.pre-dotfiles]
+run = "test -d $HOME/.config/nvim || (git clone https://github.com/LazyVim/starter $HOME/.config/nvim && rm -rf $HOME/.config/nvim/.git)"
+
+# Restart Dock/Finder after defaults change
+[bootstrap.hooks.post-defaults]
+run = "killall Dock || true; killall Finder || true"
+
+# ── Dotfiles ──────────────────────────────────────────────
+[dotfiles]
+"~/.dotfiles" = "~/src/github.com/sasha-computer/dotfiles"
+"~/.gitconfig" = "dot_gitconfig"
+"~/.ssh/config" = "dot_ssh/config"
+"~/.config/fish/" = { source = "dot_config/fish/", mode = "symlink-each" }
+"~/.config/ghostty/" = { source = "dot_config/ghostty/", mode = "symlink-each" }
+"~/.config/zed/" = { source = "dot_config/zed/", mode = "symlink-each" }
+"~/.config/opencode/" = { source = "dot_config/opencode/", mode = "symlink-each" }
+"~/.config/mise/config.toml" = "~/src/github.com/sasha-computer/dotfiles/mise.toml"
+
+# ── macOS defaults ────────────────────────────────────────
+[bootstrap.macos.dock]
+autohide = true
+show_recents = false
+
+[bootstrap.macos.finder]
+preferred_view_style = "list"
+show_extensions_warning = false
+
+[bootstrap.macos.keyboard]
+key_repeat = 2
+initial_key_repeat = 25
+
+[bootstrap.macos.trackpad]
+tap_to_click = true
+
+[bootstrap.macos.defaults]
+"NSGlobalDomain" = { NSAutomaticCapitalizationEnabled = false, NSAutomaticDashSubstitutionEnabled = false, NSAutomaticPeriodSubstitutionEnabled = false, NSAutomaticQuoteSubstitutionEnabled = false, NSAutomaticSpellingCorrectionEnabled = false }
+"com.apple.finder" = { FXDefaultSearchScope = "SCcf" }
+
+# ── Login shell ───────────────────────────────────────────
+[bootstrap.user]
+login_shell = "/opt/homebrew/bin/fish"
+
+# ── Bootstrap task (Fisher + uv tools) ────────────────────
+[tasks.bootstrap]
+run = [
+  "fish ~/src/github.com/sasha-computer/dotfiles/scripts/bootstrap.fish",
+  "uv tool install vastai",
+]
