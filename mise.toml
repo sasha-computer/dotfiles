@@ -87,7 +87,10 @@ autohide = true
 show_recents = false
 
 [bootstrap.macos.finder]
-preferred_view_style = "list"
+show_all_files = true
+show_pathbar = true
+show_status_bar = true
+preferred_view_style = "column"
 show_extensions_warning = false
 
 [bootstrap.macos.keyboard]
