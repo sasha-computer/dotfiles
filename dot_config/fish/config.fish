@@ -11,7 +11,7 @@ if command -q mise
 end
 
 if status is-interactive
-    alias cdd 'cd ~/Developer/'
+    alias cdd 'cd ~/src/'
     alias docs 'cd ~/Documents/'
     alias oc opencode
 
