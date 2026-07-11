@@ -2,7 +2,9 @@
 dotfiles.root = "~/.dotfiles"
 experimental = true
 
-# ── Packages ──────────────────────────────────────────────
+# Machine bootstrap packages
+# https://mise.jdx.dev/bootstrap/packages/
+# https://mise.jdx.dev/bootstrap/packages/brew.html
 [bootstrap.packages]
 "brew:aichat" = "latest"
 "brew:bat" = "latest"
@@ -56,7 +58,8 @@ experimental = true
 "brew-cask:whatsapp" = "latest"
 "brew-cask:zed" = "latest"
 
-# ── Hooks ─────────────────────────────────────────────────
+# Hooks run at named points in the bootstrap sequence
+# https://mise.jdx.dev/bootstrap.html#hooks
 # Clone LazyVim before dotfiles are applied (idempotent)
 [bootstrap.hooks.pre-dotfiles]
 run = "test -d $HOME/.config/nvim || (git clone https://github.com/LazyVim/starter $HOME/.config/nvim && rm -rf $HOME/.config/nvim/.git)"
@@ -65,7 +68,8 @@ run = "test -d $HOME/.config/nvim || (git clone https://github.com/LazyVim/start
 [bootstrap.hooks.post-defaults]
 run = "killall Dock || true; killall Finder || true"
 
-# ── Dotfiles ──────────────────────────────────────────────
+# Managed dotfiles
+# https://mise.jdx.dev/dotfiles.html
 [dotfiles]
 "~/.dotfiles" = "~/src/github.com/sasha-computer/dotfiles"
 "~/.gitconfig" = "dot_gitconfig"
@@ -76,7 +80,8 @@ run = "killall Dock || true; killall Finder || true"
 "~/.config/opencode/" = { source = "dot_config/opencode/", mode = "symlink-each" }
 "~/.config/mise/config.toml" = "~/src/github.com/sasha-computer/dotfiles/mise.toml"
 
-# ── macOS defaults ────────────────────────────────────────
+# macOS preferences
+# https://mise.jdx.dev/bootstrap/macos-defaults.html
 [bootstrap.macos.dock]
 autohide = true
 show_recents = false
@@ -96,11 +101,13 @@ tap_to_click = true
 "NSGlobalDomain" = { NSAutomaticCapitalizationEnabled = false, NSAutomaticDashSubstitutionEnabled = false, NSAutomaticPeriodSubstitutionEnabled = false, NSAutomaticQuoteSubstitutionEnabled = false, NSAutomaticSpellingCorrectionEnabled = false }
 "com.apple.finder" = { FXDefaultSearchScope = "SCcf" }
 
-# ── Login shell ───────────────────────────────────────────
+# User login shell
+# https://mise.jdx.dev/bootstrap/user.html
 [bootstrap.user]
 login_shell = "/opt/homebrew/bin/fish"
 
-# ── Bootstrap task (Fisher + uv tools) ────────────────────
+# Runs after tools are installed during mise bootstrap
+# https://mise.jdx.dev/bootstrap.html#how-it-runs
 [tasks.bootstrap]
 run = [
   "fish ~/src/github.com/sasha-computer/dotfiles/scripts/bootstrap.fish",
