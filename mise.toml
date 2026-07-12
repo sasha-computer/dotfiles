@@ -46,6 +46,7 @@ show_extensions_warning = false
 [bootstrap.macos.keyboard]
 key_repeat = 2
 initial_key_repeat = 25
+press_and_hold = false
 
 [bootstrap.macos.trackpad]
 tap_to_click = true
