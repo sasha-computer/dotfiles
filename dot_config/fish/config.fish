@@ -34,4 +34,5 @@ if status is-interactive
     alias v nvim
     alias vf 'nvim ~/.config/fish/config.fish'
     alias vg 'nvim ~/.config/ghostty/config.ghostty'
+    alias vb 'nvim ~/src/github.com/sasha-computer/dotfiles/Brewfile'
 end

@@ -21,14 +21,14 @@ run = "killall Dock || true; killall Finder || true"
 # https://mise.jdx.dev/dotfiles.html
 [dotfiles]
 "~/.dotfiles" = "~/src/github.com/sasha-computer/dotfiles"
-"~/.gitconfig" = "dot_gitconfig"
-"~/.ssh/config" = "dot_ssh/config"
-"~/.config/fish/" = { source = "dot_config/fish/", mode = "symlink-each" }
-"~/.config/ghostty/" = { source = "dot_config/ghostty/", mode = "symlink-each" }
-"~/.config/zed/" = { source = "dot_config/zed/", mode = "symlink-each" }
-"~/.config/opencode/" = { source = "dot_config/opencode/", mode = "symlink-each" }
+"~/.gitconfig" = "~/.dotfiles/dot_gitconfig"
+"~/.ssh/config" = "~/.dotfiles/dot_ssh/config"
+"~/.config/fish/" = { source = "~/.dotfiles/dot_config/fish/", mode = "symlink-each" }
+"~/.config/ghostty/" = { source = "~/.dotfiles/dot_config/ghostty/", mode = "symlink-each" }
+"~/.config/zed/" = { source = "~/.dotfiles/dot_config/zed/", mode = "symlink-each" }
+"~/.config/opencode/" = { source = "~/.dotfiles/dot_config/opencode/", mode = "symlink-each" }
 "~/.config/mise/config.toml" = "~/src/github.com/sasha-computer/dotfiles/mise.toml"
-"~/.agents/skills/" = { source = "dot_agents/skills/", mode = "symlink-each" }
+"~/.agents/skills/" = { source = "~/.dotfiles/dot_agents/skills/", mode = "symlink-each" }
 
 # macOS preferences
 # https://mise.jdx.dev/bootstrap/macos-defaults.html
@@ -69,3 +69,6 @@ run = [
   "fish ~/src/github.com/sasha-computer/dotfiles/scripts/bootstrap.fish",
   "uv tool install vastai",
 ]
+
+[tools]
+rust = "stable"
