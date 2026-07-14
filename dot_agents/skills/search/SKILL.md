@@ -1,9 +1,52 @@
 ---
 name: search
-description: Use this when searching the web. Covers finding articles, researching a topic, looking something up, finding recent news, discovering sources, or any "search for", "find me", "look up" request. Returns real search results with optional full-page markdown via the firecrawl CLI.
+description: Use this when searching the web or fetching library/framework documentation. Covers finding articles, researching a topic, looking something up, finding recent news, discovering sources, or any "search for", "find me", "look up" request. For library/framework docs specifically, prefer ctx7 (Context7) over firecrawl. Returns real search results with optional full-page markdown via the firecrawl CLI.
 allowed-tools:
   - Bash(firecrawl *)
   - Bash(npx firecrawl *)
+  - Bash(ctx7 *)
+  - Bash(mise exec -- ctx7 *)
+---
+
+# Library/framework documentation (ctx7)
+
+When the task is specifically about fetching documentation for a library, framework, or tool (e.g., "how does X configure Y", "what are the Z API methods", setup questions, code examples involving a specific package), use the `ctx7` CLI instead of firecrawl. It fetches current, indexed documentation from Context7.
+
+## When to use ctx7 vs firecrawl
+
+- **ctx7**: Library/framework/tool documentation lookups, API references, setup/config questions for specific packages, code examples for a known library.
+- **firecrawl**: General web search, articles, news, non-library topics, or when you need to scrape a specific URL.
+
+## ctx7 usage
+
+Two-step process: resolve the library, then query its docs.
+
+```bash
+# Step 1: Resolve the library ID (pass the user's question as query for better ranking)
+ctx7 library react "How to clean up useEffect with async operations"
+ctx7 library nextjs "How to set up app router with middleware"
+
+# Step 2: Fetch docs using the library ID from step 1
+ctx7 docs /facebook/react "How to clean up useEffect with async operations"
+ctx7 docs /vercel/next.js "How to add middleware that redirects unauthenticated users"
+```
+
+Pick the result with the closest name match, highest snippet count, and strongest reputation. Library IDs always start with `/`.
+
+### Options
+
+| Option | Description |
+| --- | --- |
+| `--json` | Output as JSON (both `library` and `docs` commands) |
+| `-k, --tokens <n>` | Max tokens for docs output (default: 5000) |
+
+### Tips
+
+- Pass the user's full question as the query for better relevance.
+- Be specific: "How to set up authentication with JWT in Express.js" beats "auth".
+- When not in a TTY, output is clean (no spinners/colors) — safe for piping.
+- No auth required for basic usage; login (`ctx7 login`) raises rate limits.
+
 ---
 
 # firecrawl search
@@ -15,6 +58,7 @@ Web search with optional content scraping. Returns search results as JSON, optio
 - You don't have a specific URL yet
 - You need to find pages, answer questions, or discover sources
 - First step in the [workflow escalation pattern](firecrawl-cli): search → scrape → map → crawl → interact
+- NOT for library/framework docs — use ctx7 above
 
 ## Quick start
 

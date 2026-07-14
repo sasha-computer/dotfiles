@@ -81,7 +81,16 @@ Managed in `dot_config/opencode/`:
 - `pr-conventions.md` — PR description rules, loaded as an instruction.
 - `tui.json` — TUI theme.
 
-Skills live in `dot_agents/skills/` and are symlinked to `~/.agents/skills/` via mise. opencode auto-loads skills from `~/.agents/skills/<name>/SKILL.md`.
+Skills live in `dot_agents/skills/` and are symlinked to `~/.agents/skills/` via mise. Both opencode and Zed auto-load skills from `~/.agents/skills/<name>/SKILL.md`. Zed live-reloads on file changes; opencode requires a restart after config changes.
+
+### Creating new skills
+
+**Always create skills in the dotfiles repo**, never directly in `~/.agents/skills/`. Skills placed directly in `~/.agents/skills/` won't be symlinked from the repo and won't survive a fresh bootstrap.
+
+To create a new skill:
+1. Create the folder and `SKILL.md` under `~/src/github.com/sasha-computer/dotfiles/dot_agents/skills/<skill-name>/`.
+2. Run `mise dotfiles status` to verify the symlink appears, or `mise bootstrap --yes --force-dotfiles` to link it.
+3. The skill is immediately available to both opencode and Zed.
 
 When creating or modifying opencode config, follow the `customize-opencode` skill. After any config change, restart opencode.
 

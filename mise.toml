@@ -72,3 +72,4 @@ run = [
 
 [tools]
 rust = "stable"
+"npm:ctx7" = "latest"
