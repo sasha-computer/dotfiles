@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "instructions": ["anti-llmisms-short.md", "pr-conventions.md"],
+  "instructions": ["anti-llmisms-short.md", "pr-conventions.md", "caveman-mode.md"],
   "permission": {
     "external_directory": "allow"
   }
