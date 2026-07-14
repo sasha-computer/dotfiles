@@ -31,6 +31,8 @@ if status is-interactive
 
     alias apply 'mise bootstrap macos defaults apply --yes'
 
+    alias grep rg
+
     alias v nvim
     alias vf 'nvim ~/.config/fish/config.fish'
     alias vg 'nvim ~/.config/ghostty/config.ghostty'
