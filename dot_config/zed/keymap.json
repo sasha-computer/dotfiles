@@ -1,0 +1,12 @@
+// Zed keymap
+//
+// For information on how to configure keybindings, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+[
+  {
+    "bindings": {
+      "cmd-b": null,
+      "cmd-s": "workspace::ToggleLeftDock"
+    }
+  }
+]
