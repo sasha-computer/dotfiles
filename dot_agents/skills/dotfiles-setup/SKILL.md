@@ -105,7 +105,7 @@ When creating or modifying opencode config, follow the `customize-opencode` skil
 Use the `dp` fish function to stage, commit, and push:
 
 ```sh
-dp
+fish -c dp
 ```
 
 This commits with message "progress" and pushes. For area-prefixed commit messages, follow the `dotfiles-git-commit` skill. Run `dp` after verifying everything works.
