@@ -5,4 +5,4 @@ if not type -q fisher
     fisher install jorgebucaran/fisher
 end
 
-fisher install jorgebucaran/hydro jethrokuan/z nickeb96/puffer-fish mattmc3/magic-enter.fish
+fisher update
