@@ -10,7 +10,13 @@ description: >
 
 # Anti-LLMisms
 
-- **BANNED: "no X, no Y, just Z" / "not X, but Y" / "not just X, but also Y" / "it's not X, it's Y" / "X rather than Y"** — never define by negation. Say what something IS.
+- **BANNED: negative parallelism (contrastive reframe).** Never define by negation. Say what something IS, not what it is not. The pattern: dismiss/reject X, then assert Y. Applies even without the word "not". Covers:
+  - Obvious: "it's not X, it's Y" / "not X, but Y" / "not just X, but also Y" / "no X, no Y, just Z" / "forget X, focus on Y" / "less X, more Y" / "X is dead, Y is the future" / "you don't need X, you need Y" / "the question is not X, it's Y"
+  - Sneaky: "while X may seem..." / "sure, X..." / "at first glance, X..." / "most people think X..." / "X gets all the attention, but Y..." — if it pivots to Y, rewrite
+  - Sneaky pivot words (fine alone, banned in reframe): but, yet, actually, really, instead, rather, ultimately, in reality, the truth is, what matters is
+  - Across sentences: "Most teams think they have a hiring problem. They have a standards problem." → rewrite as direct claim
+  - Fix: delete the rejected half, rewrite the positive claim as a direct sentence
+  - Allowed: factual corrections ("Tuesday, not Thursday"), legal/technical distinctions, dates, numbers, names
 - **Banned words:** additionally, align with, boasts, bolstered, crucial, delve, emphasizing, enduring, enhance, fostering, garner, highlight, interplay, intricate, key (adj), landscape (abstract), meticulous, pivotal, robust, showcase, tapestry, testament, underscore, valuable, vibrant
 - **Use plain verbs:** is/has not serves as/boasts/features, shows not highlights, important not crucial/pivotal, complex not intricate, careful not meticulous, proof not testament
 - **No significance puffery:** stands as, is a testament, vital role, setting the stage for, indelible mark, deeply rooted, evolving landscape, focal point
