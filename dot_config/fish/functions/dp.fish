@@ -1,5 +1,6 @@
-function dp --description 'stage, commit progress, push dotfile changes'
-    cd ~/src/github.com/sasha-computer/dotfiles
+function dp --description 'apply, stage, commit progress, push dotfile changes'
+    cd ~/dotfiles
+    chezmoi apply
     git add -A
     set changed (git diff --cached --name-only)
     if test (count $changed) -eq 0

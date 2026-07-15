@@ -5,7 +5,6 @@ allowed-tools:
   - Bash(firecrawl *)
   - Bash(npx firecrawl *)
   - Bash(ctx7 *)
-  - Bash(mise exec -- ctx7 *)
 ---
 
 # Library/framework documentation (ctx7)
@@ -46,6 +45,7 @@ Pick the result with the closest name match, highest snippet count, and stronges
 - Be specific: "How to set up authentication with JWT in Express.js" beats "auth".
 - When not in a TTY, output is clean (no spinners/colors) — safe for piping.
 - No auth required for basic usage; login (`ctx7 login`) raises rate limits.
+- ctx7 is installed via `bun install -g ctx7`. Binary lives in `~/.bun/bin/`.
 
 ---
 

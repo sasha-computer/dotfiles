@@ -1,35 +1,58 @@
 # dotfiles
 
-Managed with [mise](https://mise.jdx.dev).
-
-Heavily inspired by [jclem's dotfiles](https://github.com/jclem/dotfiles).
+Managed with [chezmoi](https://www.chezmoi.io) and [Homebrew](https://brew.sh).
 
 ## Bootstrap a new Mac
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/bootstrap.sh | sh
+curl -fsSL https://bootstrap.sasha.computer | sh -s -- laptop
+# or
+curl -fsSL https://bootstrap.sasha.computer | sh -s -- nas
 ```
 
-This installs Homebrew, runs `brew bundle install` to install all formulae and casks from the Brewfile, then runs `mise bootstrap` which handles dotfiles, macOS defaults, shell, Fisher plugins, and LazyVim.
+This installs Homebrew, clones the repo to `~/dotfiles`, installs chezmoi, applies config files, installs packages, sets macOS defaults, changes login shell to fish, clones LazyVim, and installs Fisher plugins.
+
+## Reset a Mac
+
+```sh
+curl -fsSL https://reset.sasha.computer | sh -s -- laptop
+```
+
+Reverts everything bootstrap.sh did.
 
 ## Post-bootstrap (manual)
 
-1. Open 1Password → Settings → Developer → enable SSH agent
+1. Open 1Password -> Settings -> Developer -> enable SSH agent
 2. Authorize your SSH signing key in 1Password
+3. If laptop: open Raycast, run "Import Snippets" and "Import Quicklinks" from `~/.config/raycast/exports/`
 
 ## Managed files
 
 - `~/.gitconfig`
-- `~/.ssh/config`
-- `~/.config/fish/` (config.fish, fish_plugins, functions/dp.fish)
+- `~/.ssh/config` (0600)
+- `~/.config/fish/` (config.fish, fish_plugins, functions/dp.fish, functions/nnw-export.fish)
 - `~/.config/ghostty/config.ghostty`
-- `~/.config/zed/settings.json`
-- `~/.config/opencode/` (opencode.jsonc, tui.json, anti-llmisms-short.md, pr-conventions.md)
-- `~/.config/nvim/` (LazyVim, cloned by bootstrap hook)
+- `~/.config/zed/` (settings.json, keymap.json)
+- `~/.config/opencode/` (opencode.jsonc, tui.json, instructions)
+- `~/.config/raycast/` (AppleScripts, exports)
+- `~/.config/netnewswire/Subscriptions.opml`
+- `~/.agents/skills/` (7 skills)
+- `~/.config/nvim/` (LazyVim, cloned by bootstrap)
 
 ## Commands
 
-- `mise bootstrap --yes` — converge machine to declared state (runs `brew bundle install`, Fisher plugins, vastai)
-- `mise dotfiles status` — check which dotfiles are missing/differ
-- `brew bundle cleanup --file ~/src/github.com/sasha-computer/dotfiles/Brewfile` — remove brew packages not in Brewfile
-- `dp` — stage, commit ("progress"), and push dotfile changes
+- `chezmoi apply` — sync source files to home directory
+- `chezmoi diff` — show what would change
+- `dp` — apply, stage, commit ("progress"), and push
+- `nnw-export` — copy NetNewsWire OPML to dotfiles
+- `brew bundle install --file ~/dotfiles/Brewfile.laptop` — install packages
+- `brew bundle cleanup --file ~/dotfiles/Brewfile.laptop --force` — remove unlisted packages
+- `sh ~/dotfiles/scripts/macos-defaults.sh` — re-apply macOS defaults
+
+## Adding a new package
+
+```sh
+brew install foo
+# Add "brew \"foo\"" to ~/dotfiles/Brewfile.laptop
+dp
+```

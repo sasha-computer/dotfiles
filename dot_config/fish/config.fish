@@ -6,12 +6,10 @@ set -gx HOMEBREW_NO_ENV_HINTS 1
 
 set -gx EDITOR nvim
 
-if command -q mise
-    mise activate fish | source
-end
+fish_add_path ~/.bun/bin 2>/dev/null
 
 if status is-interactive
-    alias cdd 'cd ~/src/'
+    alias cdd 'cd ~/dotfiles'
     alias docs 'cd ~/Documents/'
     alias oc opencode
 
@@ -29,12 +27,12 @@ if status is-interactive
     alias gcl 'git clone'
     alias grv 'git remote -v'
 
-    alias apply 'mise bootstrap macos defaults apply --yes'
+    alias apply 'chezmoi apply'
 
     alias grep rg
 
     alias v nvim
     alias vf 'nvim ~/.config/fish/config.fish'
     alias vg 'nvim ~/.config/ghostty/config.ghostty'
-    alias vb 'nvim ~/src/github.com/sasha-computer/dotfiles/Brewfile'
+    alias vb 'nvim ~/dotfiles/Brewfile.laptop'
 end
