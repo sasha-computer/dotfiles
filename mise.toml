@@ -27,6 +27,7 @@ run = "killall Dock || true; killall Finder || true"
 "~/.config/ghostty/" = { source = "~/.dotfiles/dot_config/ghostty/", mode = "symlink-each" }
 "~/.config/zed/" = { source = "~/.dotfiles/dot_config/zed/", mode = "symlink-each" }
 "~/.config/opencode/" = { source = "~/.dotfiles/dot_config/opencode/", mode = "symlink-each" }
+"~/.config/raycast/" = { source = "~/.dotfiles/dot_config/raycast/", mode = "symlink-each" }
 "~/.config/mise/config.toml" = "~/src/github.com/sasha-computer/dotfiles/mise.toml"
 "~/.agents/skills/" = { source = "~/.dotfiles/dot_agents/skills/", mode = "symlink-each" }
 
