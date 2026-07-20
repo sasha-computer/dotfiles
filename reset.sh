@@ -65,21 +65,18 @@ rm -rf "$HOME/.config/fish" 2>/dev/null || true
 bun remove -g ctx7 2>/dev/null || true
 uv tool uninstall vastai 2>/dev/null || true
 
-# --- 8. Remove NNW OPML ---
-rm -f "$HOME/Library/Application Support/NetNewsWire/Accounts/OnMyMac/Subscriptions.opml" 2>/dev/null || true
-
-# --- 9. Remove chezmoi ---
+# --- 8. Remove chezmoi ---
 brew uninstall chezmoi 2>/dev/null || true
 rm -rf "$HOME/.config/chezmoi" 2>/dev/null || true
 
-# --- 10. Optional: uninstall Homebrew ---
+# --- 9. Optional: uninstall Homebrew ---
 printf "Uninstall Homebrew? (y/N): "
 read UNINSTALL_BREW < /dev/tty
 if [ "$UNINSTALL_BREW" = "y" ] || [ "$UNINSTALL_BREW" = "Y" ]; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
 fi
 
-# --- 11. Remove dotfiles repo ---
+# --- 10. Remove dotfiles repo ---
 rm -rf "$DOTFILES_DIR" 2>/dev/null || true
 
 echo ""

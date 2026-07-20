@@ -77,12 +77,6 @@ if [ "$MACHINE_TYPE" = "laptop" ]; then
     bun install -g ctx7 2>/dev/null || echo "WARNING: ctx7 install failed."
     uv tool install vastai 2>/dev/null || echo "WARNING: vastai install failed."
 
-    NNW_DIR="$HOME/Library/Application Support/NetNewsWire/Accounts/OnMyMac"
-    if [ -f "$DOTFILES_DIR/dot_config/netnewswire/Subscriptions.opml" ]; then
-        mkdir -p "$NNW_DIR"
-        cp "$DOTFILES_DIR/dot_config/netnewswire/Subscriptions.opml" "$NNW_DIR/Subscriptions.opml"
-    fi
-
     echo ""
     echo "=== Raycast manual import ==="
     echo "1. Open Raycast"

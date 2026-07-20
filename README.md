@@ -30,12 +30,11 @@ Reverts everything bootstrap.sh did.
 
 - `~/.gitconfig`
 - `~/.ssh/config` (0600)
-- `~/.config/fish/` (config.fish, fish_plugins, functions/dp.fish, functions/nnw-export.fish)
+- `~/.config/fish/` (config.fish, fish_plugins, functions/dp.fish)
 - `~/.config/ghostty/config.ghostty`
 - `~/.config/zed/` (settings.json, keymap.json)
 - `~/.config/opencode/` (opencode.jsonc, tui.json, instructions)
 - `~/.config/raycast/` (AppleScripts, exports)
-- `~/.config/netnewswire/Subscriptions.opml`
 - `~/.agents/skills/` (7 skills)
 - `~/.config/nvim/` (LazyVim, cloned by bootstrap)
 
@@ -44,7 +43,6 @@ Reverts everything bootstrap.sh did.
 - `chezmoi apply` — sync source files to home directory
 - `chezmoi diff` — show what would change
 - `dp` — apply, stage, commit ("progress"), and push
-- `nnw-export` — copy NetNewsWire OPML to dotfiles
 - `brew bundle install --file ~/dotfiles/Brewfile.laptop` — install packages
 - `brew bundle cleanup --file ~/dotfiles/Brewfile.laptop --force` — remove unlisted packages
 - `sh ~/dotfiles/scripts/macos-defaults.sh` — re-apply macOS defaults

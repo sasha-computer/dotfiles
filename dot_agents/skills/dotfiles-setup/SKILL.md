@@ -27,7 +27,6 @@ All machine configuration lives in a single Git repository at `~/dotfiles`, mana
     zed/                              # Editor config
     opencode/                         # opencode.jsonc, instructions, TUI theme
     raycast/                          # AppleScripts + JSON exports
-    netnewswire/                      # OPML feed list
   dot_agents/
     skills/                           # opencode skills (this file, others)
 ```
@@ -78,7 +77,7 @@ brew bundle cleanup --file ~/dotfiles/Brewfile.laptop --force
 
 - Config: `dot_config/fish/config.fish` — sets environment variables, PATH, and interactive aliases.
 - Plugins: `dot_config/fish/fish_plugins` — list of Fisher plugins, installed by `scripts/bootstrap-fish.fish`.
-- Functions: `dot_config/fish/functions/` — one function per file (e.g., `dp.fish`, `nnw-export.fish`).
+- Functions: `dot_config/fish/functions/` — one function per file (e.g., `dp.fish`).
 - Login shell is set to `/opt/homebrew/bin/fish` by `bootstrap.sh`.
 
 When writing fish functions, follow the `write-fish-functions` skill.
@@ -106,12 +105,6 @@ When creating or modifying opencode config, follow the `customize-opencode` skil
 - Snippets and Quicklinks exported as JSON to `dot_config/raycast/exports/` — diff-friendly, version-controlled.
 - To export: run "Export Snippets" and "Export Quicklinks" in Raycast, save to `~/.config/raycast/exports/`.
 - To import on a new machine: run "Import Snippets" and "Import Quicklinks" in Raycast, select the JSON files.
-
-## NetNewsWire
-
-- OPML feed list at `dot_config/netnewswire/Subscriptions.opml` — placed at `~/.config/netnewswire/` by chezmoi.
-- To export: run `nnw-export` fish function (copies from NNW data dir to dotfiles repo).
-- To import on a new machine: `bootstrap.sh` copies the OPML to `~/Library/Application Support/NetNewsWire/Accounts/OnMyMac/Subscriptions.opml`. NNW reads it on next launch.
 
 ## Git configuration
 
