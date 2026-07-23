@@ -1,6 +1,6 @@
 #!/bin/sh
 # Create symlinks from ~/dotfiles into $HOME.
-# Re-runnable: replaces existing symlinks, skips real files with a warning.
+# Re-runnable: replaces existing symlinks, backs up and replaces real files.
 
 DOTFILES="$HOME/dotfiles"
 
@@ -11,8 +11,8 @@ link() {
     if [ -L "$dst" ]; then
         rm "$dst"
     elif [ -e "$dst" ]; then
-        echo "SKIP: $dst exists (not a symlink)"
-        return 0
+        mv "$dst" "$dst.bak.$(date +%s)"
+        echo "BACKUP: $dst -> $dst.bak.*"
     fi
     ln -s "$src" "$dst"
     echo "LINK: $dst -> $src"
