@@ -13,7 +13,7 @@ Each step is independent and re-runnable. If a step fails, just re-run the whole
 ## Reset a Mac
 
 ```sh
-curl -fsSL https://reset.sasha.computer | sh
+curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/reset.sh | sh
 ```
 
 ## Post-bootstrap (manual)

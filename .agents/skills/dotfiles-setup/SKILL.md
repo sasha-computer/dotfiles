@@ -114,7 +114,7 @@ This installs Homebrew, clones the repo, installs packages, sets macOS defaults,
 ## Reset a Mac
 
 ```sh
-curl -fsSL https://reset.sasha.computer | sh
+curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/reset.sh | sh
 ```
 
 Reverts everything bootstrap.sh did: removes symlinks, uninstalls brew packages, resets macOS defaults, resets login shell to zsh, removes LazyVim/Fisher/tools, optionally uninstalls Homebrew, removes the dotfiles repo.
