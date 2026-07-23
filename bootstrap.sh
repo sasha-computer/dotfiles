@@ -58,11 +58,16 @@ sh "$DOTFILES_DIR/scripts/macos-defaults.sh" && ok "applied" || fail "defaults f
 
 # 6. Set login shell to fish
 echo "[6] Login shell..."
+FISH_PATH=""
+for p in /opt/homebrew/bin/fish /usr/local/bin/fish; do
+    [ -x "$p" ] && FISH_PATH="$p" && break
+done
 CURRENT_SHELL=$(dscl . -read "$HOME" UserShell 2>/dev/null | awk '{print $2}')
-if [ "$CURRENT_SHELL" = "/opt/homebrew/bin/fish" ] || [ "$CURRENT_SHELL" = "/usr/local/bin/fish" ]; then
+if [ "$CURRENT_SHELL" = "$FISH_PATH" ]; then
     ok "already fish"
-elif [ -x /opt/homebrew/bin/fish ] || [ -x /usr/local/bin/fish ]; then
-    chsh -s "$(command -v fish)" && ok "set to fish" || fail "chsh failed"
+elif [ -n "$FISH_PATH" ]; then
+    grep -qx "$FISH_PATH" /etc/shells 2>/dev/null || echo "$FISH_PATH" | sudo tee -a /etc/shells >/dev/null
+    chsh -s "$FISH_PATH" && ok "set to fish" || fail "chsh failed"
 else
     fail "fish not installed (brew bundle may have partially failed)"
 fi
