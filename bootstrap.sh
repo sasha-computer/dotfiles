@@ -1,19 +1,8 @@
 #!/bin/sh
 # Bootstrap a fresh Mac. Re-runnable — skips completed steps.
-# Run with: sh bootstrap.sh laptop  (or nas)
+# Run with: sh bootstrap.sh
 
 set -u
-
-MACHINE_TYPE="${1:-}"
-if [ -z "$MACHINE_TYPE" ]; then
-    printf "Machine type (laptop/nas): "
-    read MACHINE_TYPE < /dev/tty
-fi
-
-case "$MACHINE_TYPE" in
-    laptop|nas) ;;
-    *) echo "Invalid: $MACHINE_TYPE"; exit 1 ;;
-esac
 
 DOT="$HOME/dotfiles"
 FAIL=0
@@ -44,18 +33,22 @@ fi
 
 # 3. Packages
 echo "[3] Packages"
-if [ -f "$DOT/Brewfile.$MACHINE_TYPE" ]; then
-    brew bundle install --file "$DOT/Brewfile.$MACHINE_TYPE" && ok "installed" || fail "some failed — re-run: brew bundle install --file ~/dotfiles/Brewfile.$MACHINE_TYPE"
+if [ -f "$DOT/Brewfile" ]; then
+    brew bundle install --file "$DOT/Brewfile" && ok "installed" || fail "some failed — re-run: brew bundle install --file ~/dotfiles/Brewfile"
 else
-    fail "Brewfile.$MACHINE_TYPE not found"
+    fail "Brewfile not found"
 fi
 
 # 4. macOS defaults
 echo "[4] macOS defaults"
 sh "$DOT/scripts/macos-defaults.sh" && ok "applied" || fail "failed"
 
-# 5. Fisher (install before symlinks — Fisher clobbers fish config)
-echo "[5] Fisher"
+# 5. Symlinks (BEFORE Fisher — fish_plugins must exist when fisher runs)
+echo "[5] Symlinks"
+sh "$DOT/scripts/symlink.sh" && ok "linked" || fail "failed"
+
+# 6. Fisher (reads symlinked fish_plugins, installs all plugins in one shot)
+echo "[6] Fisher"
 FISH_PATH=""
 for p in /opt/homebrew/bin/fish /usr/local/bin/fish; do
     [ -x "$p" ] && FISH_PATH="$p" && break
@@ -63,18 +56,9 @@ done
 if [ -z "$FISH_PATH" ]; then
     fail "fish not installed"
 elif fish -c "type -q fisher" 2>/dev/null; then
-    fish -c "fisher update" 2>/dev/null && ok "already installed, updated" || fail "update failed"
+    fish -c "fisher update" && ok "already installed, updated" || fail "fisher update failed"
 else
-    fish "$DOT/scripts/bootstrap-fish.fish" && ok "installed" || fail "install failed"
-fi
-
-# 6. Symlinks (AFTER Fisher)
-echo "[6] Symlinks"
-sh "$DOT/scripts/symlink.sh" && ok "linked" || fail "failed"
-
-# 6b. Re-run fisher update now that fish_plugins is symlinked
-if [ -n "$FISH_PATH" ]; then
-    fish -c "fisher update" 2>/dev/null && ok "fisher plugins installed" || fail "fisher update failed"
+    fish "$DOT/scripts/bootstrap-fish.fish" && ok "installed" || fail "fisher install failed"
 fi
 
 # 7. Login shell
@@ -99,13 +83,11 @@ else
         && ok "installed" || fail "clone failed"
 fi
 
-# 9. Global tools (laptop only)
-if [ "$MACHINE_TYPE" = "laptop" ]; then
-    echo "[9] Global tools"
-    export PATH="$HOME/.bun/bin:$PATH"
-    command -v ctx7 >/dev/null 2>&1 && ok "ctx7 already installed" || { bun install -g ctx7 2>/dev/null && ok "ctx7 installed" || fail "ctx7 failed"; }
-    command -v vastai >/dev/null 2>&1 && ok "vastai already installed" || { uv tool install vastai 2>/dev/null && ok "vastai installed" || fail "vastai failed"; }
-fi
+# 9. Global tools
+echo "[9] Global tools"
+export PATH="$HOME/.bun/bin:$PATH"
+command -v ctx7 >/dev/null 2>&1 && ok "ctx7 already installed" || { bun install -g ctx7 2>/dev/null && ok "ctx7 installed" || fail "ctx7 failed"; }
+command -v vastai >/dev/null 2>&1 && ok "vastai already installed" || { uv tool install vastai 2>/dev/null && ok "vastai installed" || fail "vastai failed"; }
 
 # 10. Auto-commit timer
 echo "[10] Auto-commit"

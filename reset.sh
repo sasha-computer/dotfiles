@@ -2,12 +2,6 @@
 # Revert everything bootstrap.sh did. Re-runnable.
 set -eu
 
-MACHINE_TYPE="${1:-}"
-if [ -z "$MACHINE_TYPE" ]; then
-    printf "Machine type (laptop/nas): "
-    read MACHINE_TYPE < /dev/tty
-fi
-
 DOTFILES_DIR="$HOME/dotfiles"
 
 # 1. Remove symlinks
@@ -42,9 +36,9 @@ BREW_BIN=""
 for p in /opt/homebrew/bin/brew /usr/local/bin/brew; do
     [ -x "$p" ] && BREW_BIN="$p" && break
 done
-if [ -n "$BREW_BIN" ] && [ -f "$DOTFILES_DIR/Brewfile.$MACHINE_TYPE" ]; then
+if [ -n "$BREW_BIN" ] && [ -f "$DOTFILES_DIR/Brewfile" ]; then
     eval "$("$BREW_BIN" shellenv)"
-    brew bundle cleanup --file "$DOTFILES_DIR/Brewfile.$MACHINE_TYPE" --force 2>/dev/null || true
+    brew bundle cleanup --file "$DOTFILES_DIR/Brewfile" --force 2>/dev/null || true
 fi
 
 # 4. Reset macOS defaults
