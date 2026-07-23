@@ -40,24 +40,20 @@ else
     git clone https://github.com/sasha-computer/dotfiles.git "$DOTFILES_DIR" && ok "cloned" || fail "clone failed"
 fi
 
-# 3. Symlink config files
-echo "[3] Symlink config..."
-sh "$DOTFILES_DIR/scripts/symlink.sh" && ok "symlinked" || fail "symlink failed"
-
-# 4. Install packages
-echo "[4] Packages..."
+# 3. Install packages
+echo "[3] Packages..."
 if [ -f "$DOTFILES_DIR/Brewfile.$MACHINE_TYPE" ]; then
     brew bundle install --file "$DOTFILES_DIR/Brewfile.$MACHINE_TYPE" && ok "installed" || fail "some packages failed (re-run: brew bundle install --file ~/dotfiles/Brewfile.$MACHINE_TYPE)"
 else
     fail "Brewfile.$MACHINE_TYPE not found"
 fi
 
-# 5. macOS defaults
-echo "[5] macOS defaults..."
+# 4. macOS defaults
+echo "[4] macOS defaults..."
 sh "$DOTFILES_DIR/scripts/macos-defaults.sh" && ok "applied" || fail "defaults failed"
 
-# 6. Check fish installed (chsh is a manual step — needs interactive password)
-echo "[6] Fish shell..."
+# 5. Check fish installed (chsh is a manual step — needs interactive password)
+echo "[5] Fish shell..."
 FISH_PATH=""
 for p in /opt/homebrew/bin/fish /usr/local/bin/fish; do
     [ -x "$p" ] && FISH_PATH="$p" && break
@@ -68,8 +64,8 @@ else
     fail "fish not installed (brew bundle may have partially failed)"
 fi
 
-# 7. LazyVim
-echo "[7] LazyVim..."
+# 6. LazyVim
+echo "[6] LazyVim..."
 if [ -d "$HOME/.config/nvim" ]; then
     ok "already installed"
 else
@@ -78,17 +74,20 @@ else
         && ok "installed" || fail "clone failed"
 fi
 
-# 8. Fisher plugins (manual step — needs interactive fish shell)
-echo "[8] Fisher..."
-if command -v fish >/dev/null 2>&1; then
-    if fish -c "type -q fisher" 2>/dev/null; then
-        ok "already installed"
-    else
-        ok "not yet installed (manual step below)"
-    fi
+# 7. Fisher plugins (only if fish is installed)
+echo "[7] Fisher..."
+if [ -z "$FISH_PATH" ]; then
+    fail "fish not installed, skipping"
+elif fish -c "type -q fisher" 2>/dev/null; then
+    fish -c "fisher update" && ok "already installed, updated" || fail "fisher update failed"
 else
-    fail "fish not installed"
+    fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher && fisher update" \
+        && ok "installed" || fail "Fisher install failed"
 fi
+
+# 8. Symlink config files (AFTER Fisher — Fisher clobbers fish config)
+echo "[8] Symlink config..."
+sh "$DOTFILES_DIR/scripts/symlink.sh" && ok "symlinked" || fail "symlink failed"
 
 # 9. Global tools (laptop only)
 if [ "$MACHINE_TYPE" = "laptop" ]; then
@@ -125,15 +124,14 @@ fi
 echo ""
 echo "Post-bootstrap manual steps:"
 echo ""
-echo "1. Set fish as login shell:"
-echo "   echo $FISH_PATH | sudo tee -a /etc/shells"
-echo "   chsh -s $FISH_PATH"
-echo ""
-echo "2. Install Fisher plugins (in a fish shell):"
-echo "   fish -c 'curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher && fisher update'"
-echo ""
-echo "3. Re-create symlinks (Fisher clobbers them):"
-echo "   sh ~/dotfiles/scripts/symlink.sh"
-echo ""
-echo "4. Open 1Password -> Settings -> Developer -> enable SSH agent"
-echo "5. Authorize your SSH signing key in 1Password"
+if [ -n "$FISH_PATH" ]; then
+    CURRENT_SHELL=$(dscl . -read "$HOME" UserShell 2>/dev/null | awk '{print $2}')
+    if [ "$CURRENT_SHELL" != "$FISH_PATH" ]; then
+        echo "1. Set fish as login shell:"
+        echo "   echo $FISH_PATH | sudo tee -a /etc/shells"
+        echo "   chsh -s $FISH_PATH"
+        echo ""
+    fi
+fi
+echo "2. Open 1Password -> Settings -> Developer -> enable SSH agent"
+echo "3. Authorize your SSH signing key in 1Password"
