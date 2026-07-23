@@ -56,18 +56,14 @@ fi
 echo "[5] macOS defaults..."
 sh "$DOTFILES_DIR/scripts/macos-defaults.sh" && ok "applied" || fail "defaults failed"
 
-# 6. Set login shell to fish
-echo "[6] Login shell..."
+# 6. Check fish installed (chsh is a manual step — needs interactive password)
+echo "[6] Fish shell..."
 FISH_PATH=""
 for p in /opt/homebrew/bin/fish /usr/local/bin/fish; do
     [ -x "$p" ] && FISH_PATH="$p" && break
 done
-CURRENT_SHELL=$(dscl . -read "$HOME" UserShell 2>/dev/null | awk '{print $2}')
-if [ "$CURRENT_SHELL" = "$FISH_PATH" ]; then
-    ok "already fish"
-elif [ -n "$FISH_PATH" ]; then
-    grep -qx "$FISH_PATH" /etc/shells 2>/dev/null || sudo sh -c "echo '$FISH_PATH' >> /etc/shells" </dev/tty
-    chsh -s "$FISH_PATH" </dev/tty && ok "set to fish" || fail "chsh failed"
+if [ -n "$FISH_PATH" ]; then
+    ok "installed at $FISH_PATH"
 else
     fail "fish not installed (brew bundle may have partially failed)"
 fi
@@ -82,10 +78,14 @@ else
         && ok "installed" || fail "clone failed"
 fi
 
-# 8. Fisher plugins
+# 8. Fisher plugins (manual step — needs interactive fish shell)
 echo "[8] Fisher..."
 if command -v fish >/dev/null 2>&1; then
-    fish -c "type -q fisher; or begin; curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source; fisher install jorgebucaran/fisher; end; fisher update" && ok "installed" || fail "Fisher failed"
+    if fish -c "type -q fisher" 2>/dev/null; then
+        ok "already installed"
+    else
+        ok "not yet installed (manual step below)"
+    fi
 else
     fail "fish not installed"
 fi
@@ -124,9 +124,17 @@ else
 fi
 echo ""
 echo "Post-bootstrap manual steps:"
-echo "1. Open 1Password -> Settings -> Developer -> enable SSH agent"
-echo "2. Authorize your SSH signing key in 1Password"
+echo ""
+echo "1. Set fish as login shell:"
+echo "   echo $FISH_PATH | sudo tee -a /etc/shells"
+echo "   chsh -s $FISH_PATH"
+echo ""
+echo "2. Install Fisher plugins (in a fish shell):"
+echo "   fish -c 'curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher && fisher update'"
+echo ""
+echo "3. Open 1Password -> Settings -> Developer -> enable SSH agent"
+echo "4. Authorize your SSH signing key in 1Password"
 if [ "$MACHINE_TYPE" = "laptop" ]; then
-    echo "3. Open Raycast -> Import Snippets from ~/.config/raycast/exports/snippets.json"
-    echo "4. Open Raycast -> Import Quicklinks from ~/.config/raycast/exports/quicklinks.json"
+    echo "5. Open Raycast -> Import Snippets from ~/.config/raycast/exports/snippets.json"
+    echo "6. Open Raycast -> Import Quicklinks from ~/.config/raycast/exports/quicklinks.json"
 fi
