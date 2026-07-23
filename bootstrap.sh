@@ -37,6 +37,7 @@ echo "[4] macOS defaults"
 sh "$DOT/scripts/macos-defaults.sh" && ok "applied" || fail "failed"
 
 echo "[5] Symlinks"
+rm -rf "$HOME/.config/fish"
 sh "$DOT/scripts/symlink.sh" && ok "linked" || fail "failed"
 
 echo "[6] Fisher"
@@ -46,8 +47,6 @@ for p in /opt/homebrew/bin/fish /usr/local/bin/fish; do
 done
 if [ -z "$FISH_PATH" ]; then
     fail "fish not installed"
-elif fish -c "type -q fisher" 2>/dev/null; then
-    fish -c "fisher update" && ok "already installed, updated" || fail "fisher update failed"
 else
     fish "$DOT/scripts/bootstrap-fish.fish" && ok "installed" || fail "fisher install failed"
 fi
