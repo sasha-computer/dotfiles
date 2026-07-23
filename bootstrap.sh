@@ -66,8 +66,8 @@ CURRENT_SHELL=$(dscl . -read "$HOME" UserShell 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_SHELL" = "$FISH_PATH" ]; then
     ok "already fish"
 elif [ -n "$FISH_PATH" ]; then
-    grep -qx "$FISH_PATH" /etc/shells 2>/dev/null || echo "$FISH_PATH" | sudo tee -a /etc/shells >/dev/null
-    chsh -s "$FISH_PATH" && ok "set to fish" || fail "chsh failed"
+    grep -qx "$FISH_PATH" /etc/shells 2>/dev/null || sudo sh -c "echo '$FISH_PATH' >> /etc/shells" </dev/tty
+    chsh -s "$FISH_PATH" </dev/tty && ok "set to fish" || fail "chsh failed"
 else
     fail "fish not installed (brew bundle may have partially failed)"
 fi
@@ -85,7 +85,7 @@ fi
 # 8. Fisher plugins
 echo "[8] Fisher..."
 if command -v fish >/dev/null 2>&1; then
-    fish "$DOTFILES_DIR/scripts/bootstrap-fish.fish" && ok "installed" || fail "Fisher failed"
+    fish -c "type -q fisher; or begin; curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source; fisher install jorgebucaran/fisher; end; fisher update" && ok "installed" || fail "Fisher failed"
 else
     fail "fish not installed"
 fi
