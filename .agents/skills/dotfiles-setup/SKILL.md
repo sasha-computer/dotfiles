@@ -1,6 +1,6 @@
 ---
 name: dotfiles-setup
-description: Explains how dotfiles are managed on this machine. Use when adding, modifying, or troubleshooting system packages, Brewfile entries, symlink setup, fish shell setup, opencode config, or any managed dotfile. Also use when a user asks how the machine is configured or how to install a new tool.
+description: Explains how dotfiles are managed on this machine. Use when adding, modifying, or troubleshooting system packages, Brewfile entries, symlink setup, fish shell setup, or any managed dotfile. Also use when a user asks how the machine is configured or how to install a new tool.
 ---
 
 # Dotfiles Setup
@@ -13,8 +13,7 @@ All machine configuration lives in a single Git repository at `~/dotfiles`, mana
 ~/dotfiles/
   bootstrap.sh                        # One-shot installer for a fresh Mac
   reset.sh                            # Reverts everything bootstrap.sh does
-  Brewfile.laptop                     # Homebrew packages for laptop
-  Brewfile.nas                        # Homebrew packages for NAS
+  Brewfile                            # Homebrew packages
   .gitconfig                          # ~/.gitconfig (SSH signing via 1Password)
   .gitignore_global                   # ~/.gitignore_global
   .ssh/config                         # ~/.ssh/config (0600 perms, 1Password SSH agent)
@@ -22,15 +21,12 @@ All machine configuration lives in a single Git repository at `~/dotfiles`, mana
     fish/                             # Shell config, plugins, functions
     ghostty/                          # Terminal config
     zed/                              # Editor config
-    opencode/                         # opencode.jsonc, instructions, TUI theme
   .agents/
-    skills/                           # opencode skills (this file, others)
+    skills/                           # Skills (this file, others)
   scripts/
     symlink.sh                        # Creates symlinks from ~/dotfiles into $HOME
     macos-defaults.sh                 # All defaults write commands
     bootstrap-fish.fish               # Fisher plugin installation
-    autocommit.sh                     # Hourly git commit+push (called by launchd)
-    com.sasha.dotfiles.autocommit.plist  # launchd plist for auto-commit
 ```
 
 ## How symlinks manage dotfiles
@@ -44,27 +40,27 @@ To re-create symlinks (e.g., after adding a new file):
 sh ~/dotfiles/scripts/symlink.sh
 ```
 
-An auto-commit timer (launchd) runs hourly, committing and pushing any changes. The `dp` fish function is a manual fallback.
+The `dp` fish function stages, commits, and pushes changes manually.
 
 ## How packages are installed
 
-### Homebrew (Brewfile.$machine_type)
+### Homebrew (Brewfile)
 
-Two Brewfiles exist: `Brewfile.laptop` (full package set) and `Brewfile.nas` (minimal CLI tools). The bootstrap script installs from the appropriate file based on machine type.
+A single `Brewfile` lists all packages. The bootstrap script installs from it.
 
-To install packages on a new machine or after changing a Brewfile:
+To install packages on a new machine or after changing the Brewfile:
 ```sh
-brew bundle install --file ~/dotfiles/Brewfile.laptop
+brew bundle install --file ~/dotfiles/Brewfile
 ```
 
 To add a new tool:
 1. `brew install foo`
-2. Add `brew "foo"` to the appropriate Brewfile in `~/dotfiles/`.
-3. The auto-commit timer will handle committing and pushing.
+2. Add `brew "foo"` to `~/dotfiles/Brewfile`.
+3. Run `dp` to commit.
 
-To remove packages not listed in a Brewfile:
+To remove packages not listed in the Brewfile:
 ```sh
-brew bundle cleanup --file ~/dotfiles/Brewfile.laptop --force
+brew bundle cleanup --file ~/dotfiles/Brewfile --force
 ```
 
 ### Global tools
@@ -81,22 +77,13 @@ brew bundle cleanup --file ~/dotfiles/Brewfile.laptop --force
 
 When writing fish functions, follow the `write-fish-functions` skill.
 
-## opencode configuration
+## Skills
 
-Managed in `.config/opencode/`:
-- `opencode.jsonc` — main config (schema, instructions, permissions).
-- `anti-llmisms-short.md` — writing style rules, loaded as an instruction.
-- `pr-conventions.md` — PR description rules, loaded as an instruction.
-- `caveman-mode.md` — caveman mode instruction.
-- `tui.json` — TUI theme.
-
-Skills live in `.agents/skills/` and are symlinked to `~/.agents/skills/`. Both opencode and Zed auto-load skills from `~/.agents/skills/<name>/SKILL.md`. Zed live-reloads on file changes; opencode requires a restart after config changes.
+Skills live in `.agents/skills/` and are symlinked to `~/.agents/skills/`. Zed auto-loads skills from `~/.agents/skills/<name>/SKILL.md` and live-reloads on file changes.
 
 ### Creating new skills
 
 Create the folder and `SKILL.md` under `~/dotfiles/.agents/skills/<skill-name>/`. Run `sh ~/dotfiles/scripts/symlink.sh` to create the symlink.
-
-When creating or modifying opencode config, follow the `customize-opencode` skill. After any config change, restart opencode.
 
 ## Git configuration
 
@@ -106,30 +93,28 @@ When creating or modifying opencode config, follow the `customize-opencode` skil
 
 ## Committing changes
 
-The auto-commit timer (launchd) runs hourly, committing and pushing any changes automatically. The `dp` fish function is a manual fallback:
+Use the `dp` fish function to stage, commit, and push:
 
 ```sh
 fish -c dp
 ```
 
-This stages, commits with message "progress", and pushes. For area-prefixed commit messages, follow the `dotfiles-git-commit` skill.
+For area-prefixed commit messages, follow the `dotfiles-git-commit` skill.
 
 ## Bootstrap a new Mac
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/bootstrap.sh -o /tmp/bootstrap.sh && sh /tmp/bootstrap.sh laptop
-# or
-curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/bootstrap.sh -o /tmp/bootstrap.sh && sh /tmp/bootstrap.sh nas
+curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/bootstrap.sh -o /tmp/bootstrap.sh && sh /tmp/bootstrap.sh
 ```
 
 Each step is independent and re-runnable. If a step fails, re-run the whole script — completed steps are skipped. The script verifies all symlinks and Fisher at the end.
 
-This installs Homebrew, clones the repo, installs packages, sets macOS defaults, installs Fisher, creates symlinks, sets login shell to fish, clones LazyVim, installs global tools (laptop only), sets up the auto-commit timer, and verifies everything.
+This installs Homebrew, clones the repo, installs packages, sets macOS defaults, creates symlinks, installs Fisher, sets login shell to fish, clones LazyVim, installs global tools, and verifies everything.
 
 ## Reset a Mac
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/reset.sh -o /tmp/reset.sh && sh /tmp/reset.sh laptop
+curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/reset.sh -o /tmp/reset.sh && sh /tmp/reset.sh
 ```
 
-Reverts everything bootstrap.sh did: removes symlinks, uninstalls brew packages, resets macOS defaults, resets login shell to zsh, removes LazyVim/Fisher/tools, unloads auto-commit timer, optionally uninstalls Homebrew, removes the dotfiles repo.
+Reverts everything bootstrap.sh did: removes symlinks, uninstalls brew packages, resets macOS defaults, resets login shell to zsh, removes LazyVim/Fisher/tools, optionally uninstalls Homebrew, removes the dotfiles repo.

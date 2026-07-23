@@ -1,7 +1,3 @@
-// Zed keymap
-//
-// For information on how to configure keybindings, see the Zed
-// documentation: https://zed.dev/docs/key-bindings
 [
   {
     "bindings": {

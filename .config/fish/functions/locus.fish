@@ -1,4 +1,3 @@
-# Start the Locus learning chat app in a detached tmux session.
 function locus --description 'Start Locus in a detached tmux session'
     argparse --name=locus --max-args=0 h/help s/stop a/attach -- $argv
     or return

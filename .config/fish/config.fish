@@ -11,7 +11,6 @@ fish_add_path ~/.bun/bin 2>/dev/null
 if status is-interactive
     alias cdd 'cd ~/dotfiles'
     alias docs 'cd ~/Documents/'
-    alias oc opencode
 
     alias gb 'git branch -a'
     alias gl 'git log --oneline'

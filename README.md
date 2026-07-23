@@ -1,6 +1,6 @@
 # dotfiles
 
-Symlink-based dotfile management with Homebrew. No chezmoi, no apply step — edits to `~/dotfiles/` are live immediately via symlinks. An auto-commit timer pushes changes hourly.
+Symlink-based dotfile management with Homebrew. Edits to `~/dotfiles/` are live immediately via symlinks.
 
 ## Bootstrap a new Mac
 
@@ -27,7 +27,6 @@ curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/reset.
 - Symlinks run BEFORE Fisher so `fish_plugins` exists when fisher reads it
 - Fish files are symlinked individually (Fisher generates files we don't track)
 - Everything else is symlinked at the directory level
-- `scripts/autocommit.sh` runs hourly via launchd, commits and pushes any changes
 
 ## Symlinked files
 
@@ -37,13 +36,12 @@ curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/reset.
 - `~/.config/fish/` (config.fish, fish_plugins, functions/*.fish — individual files)
 - `~/.config/ghostty/config.ghostty`
 - `~/.config/zed/` (settings.json, keymap.json)
-- `~/.config/opencode/` (opencode.jsonc, tui.json, instructions)
-- `~/.agents/skills/` (8 skills)
+- `~/.agents/skills/` (7 skills)
 - `~/.config/nvim/` (LazyVim, cloned by bootstrap — not symlinked)
 
 ## Commands
 
-- `dp` — stage, commit, and push (manual fallback to auto-commit)
+- `dp` — stage, commit, and push
 - `brew bundle install --file ~/dotfiles/Brewfile` — install packages
 - `brew bundle cleanup --file ~/dotfiles/Brewfile --force` — remove unlisted packages
 - `sh ~/dotfiles/scripts/symlink.sh` — re-create symlinks (run after adding new files)
@@ -56,10 +54,8 @@ brew install foo
 # Add "brew \"foo\"" to ~/dotfiles/Brewfile
 ```
 
-The auto-commit timer will handle committing and pushing.
-
 ## Adding a new config file
 
 1. Create the file in `~/dotfiles/` at the appropriate path
 2. Run `sh ~/dotfiles/scripts/symlink.sh`
-3. Done — auto-commit handles the rest
+3. Done

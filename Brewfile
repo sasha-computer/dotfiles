@@ -1,4 +1,3 @@
-# Formulae
 brew "aichat"
 brew "bat"
 brew "btop"
@@ -23,7 +22,6 @@ brew "uv"
 brew "yt-dlp"
 brew "zellij"
 
-# Casks
 cask "1password"
 cask "1password-cli"
 cask "anki"
