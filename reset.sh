@@ -21,7 +21,7 @@ remove_link() {
 remove_link "$HOME/.gitconfig"
 remove_link "$HOME/.gitignore_global"
 remove_link "$HOME/.ssh/config"
-for dir in ghostty zed opencode raycast; do
+for dir in ghostty zed opencode; do
     remove_link "$HOME/.config/$dir"
 done
 remove_link "$HOME/.agents/skills"

@@ -22,7 +22,7 @@ curl -fsSL https://reset.sasha.computer | sh -s -- laptop
 
 1. Open 1Password -> Settings -> Developer -> enable SSH agent
 2. Authorize your SSH signing key in 1Password
-3. If laptop: open Raycast, run "Import Snippets" and "Import Quicklinks" from `~/.config/raycast/exports/`
+
 
 ## How it works
 
@@ -40,7 +40,6 @@ curl -fsSL https://reset.sasha.computer | sh -s -- laptop
 - `~/.config/ghostty/config.ghostty`
 - `~/.config/zed/` (settings.json, keymap.json)
 - `~/.config/opencode/` (opencode.jsonc, tui.json, instructions)
-- `~/.config/raycast/` (AppleScripts, exports)
 - `~/.agents/skills/` (8 skills)
 - `~/.config/nvim/` (LazyVim, cloned by bootstrap — not symlinked)
 

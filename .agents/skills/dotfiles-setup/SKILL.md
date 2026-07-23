@@ -23,7 +23,6 @@ All machine configuration lives in a single Git repository at `~/dotfiles`, mana
     ghostty/                          # Terminal config
     zed/                              # Editor config
     opencode/                         # opencode.jsonc, instructions, TUI theme
-    raycast/                          # AppleScripts + JSON exports
   .agents/
     skills/                           # opencode skills (this file, others)
   scripts/
@@ -98,13 +97,6 @@ Skills live in `.agents/skills/` and are symlinked to `~/.agents/skills/`. Both 
 Create the folder and `SKILL.md` under `~/dotfiles/.agents/skills/<skill-name>/`. Run `sh ~/dotfiles/scripts/symlink.sh` to create the symlink.
 
 When creating or modifying opencode config, follow the `customize-opencode` skill. After any config change, restart opencode.
-
-## Raycast
-
-- AppleScripts in `.config/raycast/` (toggle dock, toggle menu bar) — symlinked to `~/.config/raycast/`.
-- Snippets and Quicklinks exported as JSON to `.config/raycast/exports/` — diff-friendly, version-controlled.
-- To export: run "Export Snippets" and "Export Quicklinks" in Raycast, save to `~/.config/raycast/exports/`.
-- To import on a new machine: run "Import Snippets" and "Import Quicklinks" in Raycast, select the JSON files.
 
 ## Git configuration
 

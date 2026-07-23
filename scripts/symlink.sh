@@ -25,7 +25,7 @@ link "$DOTFILES/.ssh/config"       "$HOME/.ssh/config"
 chmod 600 "$DOTFILES/.ssh/config" 2>/dev/null || true
 
 # Whole directories
-for dir in ghostty zed opencode raycast; do
+for dir in ghostty zed opencode; do
     link "$DOTFILES/.config/$dir" "$HOME/.config/$dir"
 done
 link "$DOTFILES/.agents/skills" "$HOME/.agents/skills"

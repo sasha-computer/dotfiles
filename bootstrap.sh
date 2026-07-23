@@ -134,7 +134,3 @@ echo "   fish -c 'curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher
 echo ""
 echo "3. Open 1Password -> Settings -> Developer -> enable SSH agent"
 echo "4. Authorize your SSH signing key in 1Password"
-if [ "$MACHINE_TYPE" = "laptop" ]; then
-    echo "5. Open Raycast -> Import Snippets from ~/.config/raycast/exports/snippets.json"
-    echo "6. Open Raycast -> Import Quicklinks from ~/.config/raycast/exports/quicklinks.json"
-fi
