@@ -2,7 +2,6 @@
 brew "bat"
 brew "btop"
 brew "bun"
-brew "chezmoi"
 brew "dust"
 brew "eza"
 brew "fastfetch"

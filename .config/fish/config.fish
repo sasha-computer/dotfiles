@@ -27,8 +27,6 @@ if status is-interactive
     alias gcl 'git clone'
     alias grv 'git remote -v'
 
-    alias apply 'chezmoi apply'
-
     alias grep rg
 
     alias v nvim

@@ -1,7 +1,7 @@
 #!/bin/sh
-set -eu
+# Bootstrap a fresh Mac. Each step is independent — failures don't cascade.
+# Re-runnable: skips steps that are already done.
 
-# --- 1. Machine type ---
 MACHINE_TYPE="${1:-}"
 if [ -z "$MACHINE_TYPE" ]; then
     printf "Machine type (laptop/nas): "
@@ -14,78 +14,114 @@ case "$MACHINE_TYPE" in
 esac
 
 DOTFILES_DIR="$HOME/dotfiles"
+FAIL=0
 
-# --- 2. Homebrew ---
+ok()   { echo "  OK  $1"; }
+fail() { echo "  FAIL  $1"; FAIL=1; }
+
+# 1. Homebrew
+echo "[1] Homebrew..."
+if command -v brew >/dev/null 2>&1; then
+    ok "already installed"
+else
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && ok "installed" || fail "install failed"
+fi
 BREW_BIN=""
 for p in /opt/homebrew/bin/brew /usr/local/bin/brew; do
     [ -x "$p" ] && BREW_BIN="$p" && break
 done
+[ -n "$BREW_BIN" ] && eval "$("$BREW_BIN" shellenv)"
 
-if [ -z "$BREW_BIN" ]; then
-    printf "Installing Homebrew...\n"
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    for p in /opt/homebrew/bin/brew /usr/local/bin/brew; do
-        [ -x "$p" ] && BREW_BIN="$p" && break
-    done
-fi
-
-eval "$("$BREW_BIN" shellenv)"
-
-# --- 3. Clone dotfiles ---
-if [ ! -d "$DOTFILES_DIR" ]; then
-    git clone https://github.com/sasha-computer/dotfiles.git "$DOTFILES_DIR"
-fi
-
-# --- 4. Install chezmoi ---
-brew install chezmoi
-
-# --- 5. Configure chezmoi source dir ---
-mkdir -p "$HOME/.config/chezmoi"
-cat > "$HOME/.config/chezmoi/chezmoi.toml" <<EOF
-sourceDir = "$DOTFILES_DIR"
-EOF
-
-# --- 6. Apply config files ---
-chezmoi apply --force
-
-# --- 7. Install packages ---
-brew bundle install --file "$DOTFILES_DIR/Brewfile.$MACHINE_TYPE" || {
-    echo "WARNING: Some packages failed to install."
-    echo "Re-run: brew bundle install --file ~/dotfiles/Brewfile.$MACHINE_TYPE"
-}
-
-# --- 8. macOS defaults ---
-sh "$DOTFILES_DIR/scripts/macos-defaults.sh"
-
-# --- 9. Set login shell ---
-if [ -x /opt/homebrew/bin/fish ]; then
-    chsh -s /opt/homebrew/bin/fish
+# 2. Clone dotfiles
+echo "[2] Clone dotfiles..."
+if [ -d "$DOTFILES_DIR/.git" ]; then
+    ok "already cloned"
 else
-    echo "WARNING: fish not installed, skipping shell change."
+    git clone https://github.com/sasha-computer/dotfiles.git "$DOTFILES_DIR" && ok "cloned" || fail "clone failed"
 fi
 
-# --- 10. LazyVim ---
-test -d "$HOME/.config/nvim" || (git clone https://github.com/LazyVim/starter "$HOME/.config/nvim" && rm -rf "$HOME/.config/nvim/.git")
+# 3. Symlink config files
+echo "[3] Symlink config..."
+sh "$DOTFILES_DIR/scripts/symlink.sh" && ok "symlinked" || fail "symlink failed"
 
-# --- 11. Fisher ---
+# 4. Install packages
+echo "[4] Packages..."
+if [ -f "$DOTFILES_DIR/Brewfile.$MACHINE_TYPE" ]; then
+    brew bundle install --file "$DOTFILES_DIR/Brewfile.$MACHINE_TYPE" && ok "installed" || fail "some packages failed (re-run: brew bundle install --file ~/dotfiles/Brewfile.$MACHINE_TYPE)"
+else
+    fail "Brewfile.$MACHINE_TYPE not found"
+fi
+
+# 5. macOS defaults
+echo "[5] macOS defaults..."
+sh "$DOTFILES_DIR/scripts/macos-defaults.sh" && ok "applied" || fail "defaults failed"
+
+# 6. Set login shell to fish
+echo "[6] Login shell..."
+CURRENT_SHELL=$(dscl . -read "$HOME" UserShell 2>/dev/null | awk '{print $2}')
+if [ "$CURRENT_SHELL" = "/opt/homebrew/bin/fish" ] || [ "$CURRENT_SHELL" = "/usr/local/bin/fish" ]; then
+    ok "already fish"
+elif [ -x /opt/homebrew/bin/fish ] || [ -x /usr/local/bin/fish ]; then
+    chsh -s "$(command -v fish)" && ok "set to fish" || fail "chsh failed"
+else
+    fail "fish not installed (brew bundle may have partially failed)"
+fi
+
+# 7. LazyVim
+echo "[7] LazyVim..."
+if [ -d "$HOME/.config/nvim" ]; then
+    ok "already installed"
+else
+    git clone https://github.com/LazyVim/starter "$HOME/.config/nvim" \
+        && rm -rf "$HOME/.config/nvim/.git" \
+        && ok "installed" || fail "clone failed"
+fi
+
+# 8. Fisher plugins
+echo "[8] Fisher..."
 if command -v fish >/dev/null 2>&1; then
-    fish "$DOTFILES_DIR/scripts/bootstrap-fish.fish"
+    fish "$DOTFILES_DIR/scripts/bootstrap-fish.fish" && ok "installed" || fail "Fisher failed"
+else
+    fail "fish not installed"
 fi
 
-# --- 12. Laptop extras ---
+# 9. Global tools (laptop only)
 if [ "$MACHINE_TYPE" = "laptop" ]; then
-    bun install -g ctx7 2>/dev/null || echo "WARNING: ctx7 install failed."
-    uv tool install vastai 2>/dev/null || echo "WARNING: vastai install failed."
-
-    echo ""
-    echo "=== Raycast manual import ==="
-    echo "1. Open Raycast"
-    echo "2. Run 'Import Snippets' -> select ~/.config/raycast/exports/snippets.json"
-    echo "3. Run 'Import Quicklinks' -> select ~/.config/raycast/exports/quicklinks.json"
+    echo "[9] Global tools..."
+    export PATH="$HOME/.bun/bin:$PATH"
+    if command -v ctx7 >/dev/null 2>&1; then
+        ok "ctx7 already installed"
+    else
+        bun install -g ctx7 2>/dev/null && ok "ctx7 installed" || fail "ctx7 failed"
+    fi
+    if command -v vastai >/dev/null 2>&1; then
+        ok "vastai already installed"
+    else
+        uv tool install vastai 2>/dev/null && ok "vastai installed" || fail "vastai failed"
+    fi
 fi
 
+# 10. Auto-commit timer
+echo "[10] Auto-commit timer..."
+PLIST_SRC="$DOTFILES_DIR/scripts/com.sasha.dotfiles.autocommit.plist"
+PLIST_DST="$HOME/Library/LaunchAgents/com.sasha.dotfiles.autocommit.plist"
+mkdir -p "$HOME/Library/LaunchAgents"
+cp "$PLIST_SRC" "$PLIST_DST" 2>/dev/null
+launchctl unload "$PLIST_DST" 2>/dev/null
+launchctl load "$PLIST_DST" 2>/dev/null && ok "loaded" || fail "load failed"
+
+# Summary
 echo ""
-echo "=== Bootstrap complete ==="
+if [ "$FAIL" -eq 0 ]; then
+    echo "=== All steps succeeded ==="
+else
+    echo "=== Some steps failed — re-run to retry ==="
+fi
+echo ""
 echo "Post-bootstrap manual steps:"
 echo "1. Open 1Password -> Settings -> Developer -> enable SSH agent"
 echo "2. Authorize your SSH signing key in 1Password"
+if [ "$MACHINE_TYPE" = "laptop" ]; then
+    echo "3. Open Raycast -> Import Snippets from ~/.config/raycast/exports/snippets.json"
+    echo "4. Open Raycast -> Import Quicklinks from ~/.config/raycast/exports/quicklinks.json"
+fi

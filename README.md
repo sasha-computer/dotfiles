@@ -1,6 +1,6 @@
 # dotfiles
 
-Managed with [chezmoi](https://www.chezmoi.io) and [Homebrew](https://brew.sh).
+Symlink-based dotfile management with Homebrew. No chezmoi, no apply step — edits to `~/dotfiles/` are live immediately via symlinks. An auto-commit timer pushes changes hourly.
 
 ## Bootstrap a new Mac
 
@@ -10,7 +10,7 @@ curl -fsSL https://bootstrap.sasha.computer | sh -s -- laptop
 curl -fsSL https://bootstrap.sasha.computer | sh -s -- nas
 ```
 
-This installs Homebrew, clones the repo to `~/dotfiles`, installs chezmoi, applies config files, installs packages, sets macOS defaults, changes login shell to fish, clones LazyVim, and installs Fisher plugins.
+Each step is independent and re-runnable. If a step fails, just re-run the whole script — completed steps are skipped.
 
 ## Reset a Mac
 
@@ -18,33 +18,38 @@ This installs Homebrew, clones the repo to `~/dotfiles`, installs chezmoi, appli
 curl -fsSL https://reset.sasha.computer | sh -s -- laptop
 ```
 
-Reverts everything bootstrap.sh did.
-
 ## Post-bootstrap (manual)
 
 1. Open 1Password -> Settings -> Developer -> enable SSH agent
 2. Authorize your SSH signing key in 1Password
 3. If laptop: open Raycast, run "Import Snippets" and "Import Quicklinks" from `~/.config/raycast/exports/`
 
-## Managed files
+## How it works
+
+- `scripts/symlink.sh` creates symlinks from `~/dotfiles/` into `$HOME`
+- Fish files are symlinked individually (Fisher generates files we don't track)
+- Everything else is symlinked at the directory level
+- `scripts/autocommit.sh` runs hourly via launchd, commits and pushes any changes
+
+## Symlinked files
 
 - `~/.gitconfig`
+- `~/.gitignore_global`
 - `~/.ssh/config` (0600)
-- `~/.config/fish/` (config.fish, fish_plugins, functions/dp.fish)
+- `~/.config/fish/` (config.fish, fish_plugins, functions/*.fish — individual files)
 - `~/.config/ghostty/config.ghostty`
 - `~/.config/zed/` (settings.json, keymap.json)
 - `~/.config/opencode/` (opencode.jsonc, tui.json, instructions)
 - `~/.config/raycast/` (AppleScripts, exports)
-- `~/.agents/skills/` (7 skills)
-- `~/.config/nvim/` (LazyVim, cloned by bootstrap)
+- `~/.agents/skills/` (8 skills)
+- `~/.config/nvim/` (LazyVim, cloned by bootstrap — not symlinked)
 
 ## Commands
 
-- `chezmoi apply` — sync source files to home directory
-- `chezmoi diff` — show what would change
-- `dp` — apply, stage, commit ("progress"), and push
+- `dp` — stage, commit ("progress"), and push (manual fallback to auto-commit)
 - `brew bundle install --file ~/dotfiles/Brewfile.laptop` — install packages
 - `brew bundle cleanup --file ~/dotfiles/Brewfile.laptop --force` — remove unlisted packages
+- `sh ~/dotfiles/scripts/symlink.sh` — re-create symlinks (run after adding new files)
 - `sh ~/dotfiles/scripts/macos-defaults.sh` — re-apply macOS defaults
 
 ## Adding a new package
@@ -52,5 +57,12 @@ Reverts everything bootstrap.sh did.
 ```sh
 brew install foo
 # Add "brew \"foo\"" to ~/dotfiles/Brewfile.laptop
-dp
 ```
+
+The auto-commit timer will handle committing and pushing.
+
+## Adding a new config file
+
+1. Create the file in `~/dotfiles/` at the appropriate path
+2. Run `sh ~/dotfiles/scripts/symlink.sh`
+3. Done — auto-commit handles the rest
