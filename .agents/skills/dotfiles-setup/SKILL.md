@@ -104,7 +104,7 @@ For area-prefixed commit messages, follow the `dotfiles-git-commit` skill.
 ## Bootstrap a new Mac
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/bootstrap.sh -o /tmp/bootstrap.sh && sh /tmp/bootstrap.sh
+curl -fsSL https://bootstrap.sasha.computer | sh
 ```
 
 Each step is independent and re-runnable. If a step fails, re-run the whole script — completed steps are skipped. The script verifies all symlinks and Fisher at the end.
@@ -114,7 +114,7 @@ This installs Homebrew, clones the repo, installs packages, sets macOS defaults,
 ## Reset a Mac
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/reset.sh -o /tmp/reset.sh && sh /tmp/reset.sh
+curl -fsSL https://reset.sasha.computer | sh
 ```
 
 Reverts everything bootstrap.sh did: removes symlinks, uninstalls brew packages, resets macOS defaults, resets login shell to zsh, removes LazyVim/Fisher/tools, optionally uninstalls Homebrew, removes the dotfiles repo.

@@ -5,7 +5,7 @@ Symlink-based dotfile management with Homebrew. Edits to `~/dotfiles/` are live 
 ## Bootstrap a new Mac
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/bootstrap.sh -o /tmp/bootstrap.sh && sh /tmp/bootstrap.sh
+curl -fsSL https://bootstrap.sasha.computer | sh
 ```
 
 Each step is independent and re-runnable. If a step fails, just re-run the whole script — completed steps are skipped. The script verifies all symlinks and Fisher at the end.
@@ -13,7 +13,7 @@ Each step is independent and re-runnable. If a step fails, just re-run the whole
 ## Reset a Mac
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/reset.sh -o /tmp/reset.sh && sh /tmp/reset.sh
+curl -fsSL https://reset.sasha.computer | sh
 ```
 
 ## Post-bootstrap (manual)
