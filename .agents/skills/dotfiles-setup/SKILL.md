@@ -117,19 +117,19 @@ This stages, commits with message "progress", and pushes. For area-prefixed comm
 ## Bootstrap a new Mac
 
 ```sh
-curl -fsSL https://bootstrap.sasha.computer | sh -s -- laptop
+curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/bootstrap.sh -o /tmp/bootstrap.sh && sh /tmp/bootstrap.sh laptop
 # or
-curl -fsSL https://bootstrap.sasha.computer | sh -s -- nas
+curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/bootstrap.sh -o /tmp/bootstrap.sh && sh /tmp/bootstrap.sh nas
 ```
 
-Each step is independent and re-runnable. If a step fails, re-run the whole script — completed steps are skipped.
+Each step is independent and re-runnable. If a step fails, re-run the whole script — completed steps are skipped. The script verifies all symlinks and Fisher at the end.
 
-This installs Homebrew, clones the repo to `~/dotfiles`, creates symlinks, installs packages from the appropriate Brewfile, sets macOS defaults, changes login shell to fish, clones LazyVim, installs Fisher plugins, installs global tools (laptop only), and sets up the auto-commit timer.
+This installs Homebrew, clones the repo, installs packages, sets macOS defaults, installs Fisher, creates symlinks, sets login shell to fish, clones LazyVim, installs global tools (laptop only), sets up the auto-commit timer, and verifies everything.
 
 ## Reset a Mac
 
 ```sh
-curl -fsSL https://reset.sasha.computer | sh -s -- laptop
+curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/reset.sh -o /tmp/reset.sh && sh /tmp/reset.sh laptop
 ```
 
 Reverts everything bootstrap.sh did: removes symlinks, uninstalls brew packages, resets macOS defaults, resets login shell to zsh, removes LazyVim/Fisher/tools, unloads auto-commit timer, optionally uninstalls Homebrew, removes the dotfiles repo.

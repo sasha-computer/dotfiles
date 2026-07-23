@@ -5,17 +5,17 @@ Symlink-based dotfile management with Homebrew. No chezmoi, no apply step — ed
 ## Bootstrap a new Mac
 
 ```sh
-curl -fsSL https://bootstrap.sasha.computer | sh -s -- laptop
+curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/bootstrap.sh -o /tmp/bootstrap.sh && sh /tmp/bootstrap.sh laptop
 # or
-curl -fsSL https://bootstrap.sasha.computer | sh -s -- nas
+curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/bootstrap.sh -o /tmp/bootstrap.sh && sh /tmp/bootstrap.sh nas
 ```
 
-Each step is independent and re-runnable. If a step fails, just re-run the whole script — completed steps are skipped.
+Each step is independent and re-runnable. If a step fails, just re-run the whole script — completed steps are skipped. The script verifies all symlinks and Fisher at the end.
 
 ## Reset a Mac
 
 ```sh
-curl -fsSL https://reset.sasha.computer | sh -s -- laptop
+curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/reset.sh -o /tmp/reset.sh && sh /tmp/reset.sh laptop
 ```
 
 ## Post-bootstrap (manual)
@@ -23,13 +23,13 @@ curl -fsSL https://reset.sasha.computer | sh -s -- laptop
 1. Open 1Password -> Settings -> Developer -> enable SSH agent
 2. Authorize your SSH signing key in 1Password
 
-
 ## How it works
 
 - `scripts/symlink.sh` creates symlinks from `~/dotfiles/` into `$HOME`
 - Fish files are symlinked individually (Fisher generates files we don't track)
 - Everything else is symlinked at the directory level
 - `scripts/autocommit.sh` runs hourly via launchd, commits and pushes any changes
+- Bootstrap runs Fisher before symlinks (Fisher clobbers fish config)
 
 ## Symlinked files
 
@@ -45,7 +45,7 @@ curl -fsSL https://reset.sasha.computer | sh -s -- laptop
 
 ## Commands
 
-- `dp` — stage, commit ("progress"), and push (manual fallback to auto-commit)
+- `dp` — stage, commit, and push (manual fallback to auto-commit)
 - `brew bundle install --file ~/dotfiles/Brewfile.laptop` — install packages
 - `brew bundle cleanup --file ~/dotfiles/Brewfile.laptop --force` — remove unlisted packages
 - `sh ~/dotfiles/scripts/symlink.sh` — re-create symlinks (run after adding new files)

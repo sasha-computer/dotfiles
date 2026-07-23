@@ -1,6 +1,8 @@
 #!/bin/sh
-# Bootstrap a fresh Mac. Each step is independent — failures don't cascade.
-# Re-runnable: skips steps that are already done.
+# Bootstrap a fresh Mac. Re-runnable — skips completed steps.
+# Run with: sh bootstrap.sh laptop  (or nas)
+
+set -u
 
 MACHINE_TYPE="${1:-}"
 if [ -z "$MACHINE_TYPE" ]; then
@@ -10,62 +12,80 @@ fi
 
 case "$MACHINE_TYPE" in
     laptop|nas) ;;
-    *) echo "Invalid machine type: $MACHINE_TYPE"; exit 1 ;;
+    *) echo "Invalid: $MACHINE_TYPE"; exit 1 ;;
 esac
 
-DOTFILES_DIR="$HOME/dotfiles"
+DOT="$HOME/dotfiles"
 FAIL=0
 
-ok()   { echo "  OK  $1"; }
-fail() { echo "  FAIL  $1"; FAIL=1; }
+ok()   { echo "  OK   $1"; }
+fail() { echo "  FAIL $1"; FAIL=1; }
 
 # 1. Homebrew
-echo "[1] Homebrew..."
+echo "[1] Homebrew"
 if command -v brew >/dev/null 2>&1; then
     ok "already installed"
 else
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && ok "installed" || fail "install failed"
 fi
-BREW_BIN=""
+BREW=""
 for p in /opt/homebrew/bin/brew /usr/local/bin/brew; do
-    [ -x "$p" ] && BREW_BIN="$p" && break
+    [ -x "$p" ] && BREW="$p" && break
 done
-[ -n "$BREW_BIN" ] && eval "$("$BREW_BIN" shellenv)"
+[ -n "$BREW" ] && eval "$("$BREW" shellenv)"
 
 # 2. Clone dotfiles
-echo "[2] Clone dotfiles..."
-if [ -d "$DOTFILES_DIR/.git" ]; then
+echo "[2] Clone"
+if [ -d "$DOT/.git" ]; then
     ok "already cloned"
 else
-    git clone https://github.com/sasha-computer/dotfiles.git "$DOTFILES_DIR" && ok "cloned" || fail "clone failed"
+    git clone https://github.com/sasha-computer/dotfiles.git "$DOT" && ok "cloned" || fail "clone failed"
 fi
 
-# 3. Install packages
-echo "[3] Packages..."
-if [ -f "$DOTFILES_DIR/Brewfile.$MACHINE_TYPE" ]; then
-    brew bundle install --file "$DOTFILES_DIR/Brewfile.$MACHINE_TYPE" && ok "installed" || fail "some packages failed (re-run: brew bundle install --file ~/dotfiles/Brewfile.$MACHINE_TYPE)"
+# 3. Packages
+echo "[3] Packages"
+if [ -f "$DOT/Brewfile.$MACHINE_TYPE" ]; then
+    brew bundle install --file "$DOT/Brewfile.$MACHINE_TYPE" && ok "installed" || fail "some failed — re-run: brew bundle install --file ~/dotfiles/Brewfile.$MACHINE_TYPE"
 else
     fail "Brewfile.$MACHINE_TYPE not found"
 fi
 
 # 4. macOS defaults
-echo "[4] macOS defaults..."
-sh "$DOTFILES_DIR/scripts/macos-defaults.sh" && ok "applied" || fail "defaults failed"
+echo "[4] macOS defaults"
+sh "$DOT/scripts/macos-defaults.sh" && ok "applied" || fail "failed"
 
-# 5. Check fish installed (chsh is a manual step — needs interactive password)
-echo "[5] Fish shell..."
+# 5. Fisher (install before symlinks — Fisher clobbers fish config)
+echo "[5] Fisher"
 FISH_PATH=""
 for p in /opt/homebrew/bin/fish /usr/local/bin/fish; do
     [ -x "$p" ] && FISH_PATH="$p" && break
 done
-if [ -n "$FISH_PATH" ]; then
-    ok "installed at $FISH_PATH"
+if [ -z "$FISH_PATH" ]; then
+    fail "fish not installed"
+elif fish -c "type -q fisher" 2>/dev/null; then
+    fish -c "fisher update" 2>/dev/null && ok "already installed, updated" || fail "update failed"
 else
-    fail "fish not installed (brew bundle may have partially failed)"
+    fish "$DOT/scripts/bootstrap-fish.fish" && ok "installed" || fail "install failed"
 fi
 
-# 6. LazyVim
-echo "[6] LazyVim..."
+# 6. Symlinks (AFTER Fisher)
+echo "[6] Symlinks"
+sh "$DOT/scripts/symlink.sh" && ok "linked" || fail "failed"
+
+# 7. Login shell
+echo "[7] Login shell"
+if [ -n "$FISH_PATH" ]; then
+    CURRENT=$(dscl . -read "$HOME" UserShell 2>/dev/null | awk '{print $2}')
+    if [ "$CURRENT" = "$FISH_PATH" ]; then
+        ok "already fish"
+    else
+        grep -qx "$FISH_PATH" /etc/shells 2>/dev/null || echo "$FISH_PATH" | sudo tee -a /etc/shells >/dev/null
+        chsh -s "$FISH_PATH" && ok "set to fish" || fail "chsh failed"
+    fi
+fi
+
+# 8. LazyVim
+echo "[8] LazyVim"
 if [ -d "$HOME/.config/nvim" ]; then
     ok "already installed"
 else
@@ -74,64 +94,60 @@ else
         && ok "installed" || fail "clone failed"
 fi
 
-# 7. Fisher plugins (only if fish is installed)
-echo "[7] Fisher..."
-if [ -z "$FISH_PATH" ]; then
-    fail "fish not installed, skipping"
-elif fish -c "type -q fisher" 2>/dev/null; then
-    fish -c "fisher update" && ok "already installed, updated" || fail "fisher update failed"
-else
-    fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher && fisher update" \
-        && ok "installed" || fail "Fisher install failed"
-fi
-
-# 8. Symlink config files (AFTER Fisher — Fisher clobbers fish config)
-echo "[8] Symlink config..."
-sh "$DOTFILES_DIR/scripts/symlink.sh" && ok "symlinked" || fail "symlink failed"
-
 # 9. Global tools (laptop only)
 if [ "$MACHINE_TYPE" = "laptop" ]; then
-    echo "[9] Global tools..."
+    echo "[9] Global tools"
     export PATH="$HOME/.bun/bin:$PATH"
-    if command -v ctx7 >/dev/null 2>&1; then
-        ok "ctx7 already installed"
-    else
-        bun install -g ctx7 2>/dev/null && ok "ctx7 installed" || fail "ctx7 failed"
-    fi
-    if command -v vastai >/dev/null 2>&1; then
-        ok "vastai already installed"
-    else
-        uv tool install vastai 2>/dev/null && ok "vastai installed" || fail "vastai failed"
-    fi
+    command -v ctx7 >/dev/null 2>&1 && ok "ctx7 already installed" || { bun install -g ctx7 2>/dev/null && ok "ctx7 installed" || fail "ctx7 failed"; }
+    command -v vastai >/dev/null 2>&1 && ok "vastai already installed" || { uv tool install vastai 2>/dev/null && ok "vastai installed" || fail "vastai failed"; }
 fi
 
 # 10. Auto-commit timer
-echo "[10] Auto-commit timer..."
-PLIST_SRC="$DOTFILES_DIR/scripts/com.sasha.dotfiles.autocommit.plist"
-PLIST_DST="$HOME/Library/LaunchAgents/com.sasha.dotfiles.autocommit.plist"
+echo "[10] Auto-commit"
+PLIST="$HOME/Library/LaunchAgents/com.sasha.dotfiles.autocommit.plist"
 mkdir -p "$HOME/Library/LaunchAgents"
-cp "$PLIST_SRC" "$PLIST_DST" 2>/dev/null
-launchctl unload "$PLIST_DST" 2>/dev/null
-launchctl load "$PLIST_DST" 2>/dev/null && ok "loaded" || fail "load failed"
+cp "$DOT/scripts/com.sasha.dotfiles.autocommit.plist" "$PLIST" 2>/dev/null
+launchctl unload "$PLIST" 2>/dev/null
+launchctl load "$PLIST" 2>/dev/null && ok "loaded" || fail "load failed"
+
+# 11. Verify
+echo "[11] Verify"
+BROKEN=0
+check() {
+    if [ -L "$1" ] && [ -e "$1" ]; then
+        ok "$1"
+    elif [ -L "$1" ]; then
+        fail "$1 (broken symlink)"
+        BROKEN=1
+    else
+        fail "$1 (missing)"
+        BROKEN=1
+    fi
+}
+check "$HOME/.gitconfig"
+check "$HOME/.ssh/config"
+check "$HOME/.config/ghostty"
+check "$HOME/.config/zed"
+check "$HOME/.config/opencode"
+check "$HOME/.agents/skills"
+check "$HOME/.config/fish/config.fish"
+check "$HOME/.config/fish/fish_plugins"
+check "$HOME/.config/fish/functions/dp.fish"
+
+if [ -n "$FISH_PATH" ]; then
+    fish -c "type -q fisher" 2>/dev/null && ok "fisher" || fail "fisher not installed"
+    fish -c "fisher list" 2>/dev/null | grep -q "jorgebucaran/fisher" && ok "fisher plugins" || fail "fisher plugins missing"
+fi
+
+CURRENT_SHELL=$(dscl . -read "$HOME" UserShell 2>/dev/null | awk '{print $2}')
+[ "$CURRENT_SHELL" = "$FISH_PATH" ] && ok "login shell is fish" || fail "login shell is $CURRENT_SHELL (should be $FISH_PATH)"
 
 # Summary
 echo ""
 if [ "$FAIL" -eq 0 ]; then
-    echo "=== All steps succeeded ==="
+    echo "=== ALL GOOD ==="
 else
-    echo "=== Some steps failed — re-run to retry ==="
+    echo "=== SOME STEPS FAILED — re-run to retry ==="
 fi
 echo ""
-echo "Post-bootstrap manual steps:"
-echo ""
-if [ -n "$FISH_PATH" ]; then
-    CURRENT_SHELL=$(dscl . -read "$HOME" UserShell 2>/dev/null | awk '{print $2}')
-    if [ "$CURRENT_SHELL" != "$FISH_PATH" ]; then
-        echo "1. Set fish as login shell:"
-        echo "   echo $FISH_PATH | sudo tee -a /etc/shells"
-        echo "   chsh -s $FISH_PATH"
-        echo ""
-    fi
-fi
-echo "2. Open 1Password -> Settings -> Developer -> enable SSH agent"
-echo "3. Authorize your SSH signing key in 1Password"
+echo "Manual step: Open 1Password -> Settings -> Developer -> enable SSH agent + authorize signing key"

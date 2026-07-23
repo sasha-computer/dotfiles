@@ -1,8 +1,8 @@
 #!/bin/sh
 # Create symlinks from ~/dotfiles into $HOME.
-# Re-runnable: replaces existing symlinks, backs up and replaces real files.
+# Re-runnable: replaces existing symlinks, backs up real files.
 
-DOTFILES="$HOME/dotfiles"
+DOT="$HOME/dotfiles"
 
 link() {
     src="$1"
@@ -12,27 +12,26 @@ link() {
         rm "$dst"
     elif [ -e "$dst" ]; then
         mv "$dst" "$dst.bak.$(date +%s)"
-        echo "BACKUP: $dst -> $dst.bak.*"
+        echo "  BACKUP: $dst"
     fi
     ln -s "$src" "$dst"
-    echo "LINK: $dst -> $src"
 }
 
 # Single files
-link "$DOTFILES/.gitconfig"       "$HOME/.gitconfig"
-link "$DOTFILES/.gitignore_global" "$HOME/.gitignore_global"
-link "$DOTFILES/.ssh/config"       "$HOME/.ssh/config"
-chmod 600 "$DOTFILES/.ssh/config" 2>/dev/null || true
+link "$DOT/.gitconfig"        "$HOME/.gitconfig"
+link "$DOT/.gitignore_global" "$HOME/.gitignore_global"
+link "$DOT/.ssh/config"       "$HOME/.ssh/config"
+chmod 600 "$DOT/.ssh/config" 2>/dev/null || true
 
 # Whole directories
 for dir in ghostty zed opencode; do
-    link "$DOTFILES/.config/$dir" "$HOME/.config/$dir"
+    link "$DOT/.config/$dir" "$HOME/.config/$dir"
 done
-link "$DOTFILES/.agents/skills" "$HOME/.agents/skills"
+link "$DOT/.agents/skills" "$HOME/.agents/skills"
 
-# Fish: individual files (Fisher generates files we don't want in the repo)
-link "$DOTFILES/.config/fish/config.fish"   "$HOME/.config/fish/config.fish"
-link "$DOTFILES/.config/fish/fish_plugins"  "$HOME/.config/fish/fish_plugins"
-for f in "$DOTFILES"/.config/fish/functions/*.fish; do
+# Fish: individual files (Fisher generates files we don't track)
+link "$DOT/.config/fish/config.fish"  "$HOME/.config/fish/config.fish"
+link "$DOT/.config/fish/fish_plugins" "$HOME/.config/fish/fish_plugins"
+for f in "$DOT"/.config/fish/functions/*.fish; do
     [ -f "$f" ] && link "$f" "$HOME/.config/fish/functions/$(basename "$f")"
 done
