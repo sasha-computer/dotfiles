@@ -29,7 +29,7 @@ curl -fsSL https://raw.githubusercontent.com/sasha-computer/dotfiles/main/reset.
 - Fish files are symlinked individually (Fisher generates files we don't track)
 - Everything else is symlinked at the directory level
 - `scripts/autocommit.sh` runs hourly via launchd, commits and pushes any changes
-- Bootstrap runs Fisher before symlinks (Fisher clobbers fish config)
+- Bootstrap installs Fisher, creates symlinks, then runs `fisher update` so plugins install from the symlinked `fish_plugins` file
 
 ## Symlinked files
 

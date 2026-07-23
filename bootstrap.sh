@@ -72,6 +72,11 @@ fi
 echo "[6] Symlinks"
 sh "$DOT/scripts/symlink.sh" && ok "linked" || fail "failed"
 
+# 6b. Re-run fisher update now that fish_plugins is symlinked
+if [ -n "$FISH_PATH" ]; then
+    fish -c "fisher update" 2>/dev/null && ok "fisher plugins installed" || fail "fisher update failed"
+fi
+
 # 7. Login shell
 echo "[7] Login shell"
 if [ -n "$FISH_PATH" ]; then
